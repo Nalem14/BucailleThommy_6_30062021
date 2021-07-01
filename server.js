@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const userCtrl = require("./app/controllers/user.controller");
 
 const app = express();
 
@@ -30,10 +31,14 @@ db.mongoose
     process.exit();
   });
 
-// simple route
+/** 
+ * Routes
+ **/
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to So Pekocko application." });
 });
+app.post("/api/auth/signup", userCtrl.signup);
+app.post("/api/auth/login", userCtrl.login);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
