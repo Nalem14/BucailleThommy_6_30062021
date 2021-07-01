@@ -5,7 +5,7 @@ const userCtrl = require("./app/controllers/user.controller");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8080"
+  origin: "http://localhost:4200"
 };
 
 app.use(cors(corsOptions));

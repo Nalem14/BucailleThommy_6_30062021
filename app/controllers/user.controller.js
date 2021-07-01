@@ -2,7 +2,7 @@ const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 
-const User = db.User;
+const User = db.user;
 
 // Create new User
 exports.signup = (req, res) => {
@@ -47,5 +47,9 @@ exports.login = (req, res) => {
 
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
-  
+  User.findOneAndDelete(req.body.userId).then(result => {
+    if (!result) {
+        return res.status(401).json({ error: 'Votre compte utilisateur n\'as pas pu être trouvé.' });
+    }
+  }).catch(error => res.status(500).json({ error }));
 };
