@@ -1,5 +1,7 @@
 # BucailleThommy_6_30062021
 
+## Required
+* Node 14.16.x
 ## How to install project
 ### Clone the repo
 ``git clone https://github.com/Nalem14/BucailleThommy_6_30062021``
