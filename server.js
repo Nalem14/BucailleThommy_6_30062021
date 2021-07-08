@@ -61,6 +61,7 @@ app.get("/api/sauces/:id", auth, sauceCtrl.get);
 app.post("/api/sauces", auth, sauceCtrl.add);
 app.post("/api/sauces/:id/like", auth, sauceCtrl.like);
 app.put("/api/sauces/:id", auth, sauceCtrl.update);
+app.delete("/api/sauces/:id", auth, sauceCtrl.delete);
 
 
 
