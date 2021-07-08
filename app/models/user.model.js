@@ -1,8 +1,8 @@
 module.exports = mongoose => {
     var schema = mongoose.Schema(
       {
-        email: {type: String, unique: true, lowercase: true, index: true},
-        password: String
+        email: {type: String, unique: true, lowercase: true, index: true, required: true},
+        password: {type: String, required: true}
       },
       { timestamps: true }
     );
@@ -13,6 +13,6 @@ module.exports = mongoose => {
       return object;
     });
   
-    const User = mongoose.model("user", schema);
+    const User = mongoose.model("User", schema);
     return User;
   };

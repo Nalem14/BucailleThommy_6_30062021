@@ -1,8 +1,8 @@
 module.exports = mongoose => {
     var schema = mongoose.Schema(
       {
-        userId: String,
-        name: String,
+        userId: {type: String, required: true, ref: 'User'},
+        name: {type: String, required: true},
         manufacturer: String,
         description: String,
         mainPepper: String,
@@ -10,8 +10,8 @@ module.exports = mongoose => {
         heat: Number,
         likes: Number,
         dislikes: Number,
-        usersLiked: [String],
-        usersDisliked: [String]
+        usersLiked: [{ type : String, ref: 'User' }],
+        usersDisliked: [{ type : String, ref: 'User' }]
       },
       { timestamps: true }
     );
@@ -22,6 +22,6 @@ module.exports = mongoose => {
       return object;
     });
   
-    const Sauce = mongoose.model("sauce", schema);
+    const Sauce = mongoose.model("Sauce", schema);
     return Sauce;
   };
