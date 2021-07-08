@@ -92,8 +92,6 @@ exports.like = (req, res) => {
         // Save the sauce and return response messsage
         Sauce.findByIdAndUpdate(sauce._id, sauce).then(() => res.status(200).json({ message: 'Votre like a été mis à jour.' }))
         .catch(error => res.status(400).json({ error }));
-
-        console.log(sauce);
     });
 };
 
@@ -129,15 +127,58 @@ exports.add = (req, res) => {
             .then(() => res.status(201).json({ message: 'La sauce a bien été ajoutée.' }))
             .catch(error => res.status(400).json({ error }));
 
-        // Reset all likes and dislikes
-        resetLikesAndDislikes();
+        // Update all sauces to reset likes, dislikes and users ref
+        Sauce.updateMany({ }, { likes: 0, dislikes: 0, usersLiked: [], usersDisliked: [] });
 
     } catch (error) {
         res.status(500).json({ error: error });
     }
 };
 
-function resetLikesAndDislikes() {
-    // Update all sauces to reset likes, dislikes and users ref
-    Sauce.updateMany({ }, { likes: 0, dislikes: 0, usersLiked: [], usersDisliked: [] });
-}
+// Update sauce
+exports.update = async (req, res) => {
+    try {
+        const sauce = await Sauce.findById(req.params.id);
+        // If not exist, return an error
+        if(!sauce) {
+            return res.status(404).json({ error: "Cette sauce n'existe pas." });
+        }
+
+        // Define data to null
+        let sauceData = null;
+
+        // Check if request contain files uploaded
+        if(!req.files) {
+            // If no image to update, sauce datas are in body
+            sauceData = req.body;
+        }else{
+            // If request contain image, sauce datas are in body.sauce
+            sauceData = JSON.parse(req.body.sauce);
+
+            // Get and move image to public folder
+            let image = req.files.image;
+            image.mv('./public/images/' + image.name);
+
+            // Update imageUrl in Sauce object
+            sauce.imageUrl = "http://localhost:3000/api/image/" + image.name;
+        }
+
+        console.log(sauce);
+
+        // Update the Sauce object with new datas
+        sauce.name = sauceData.name;
+        sauce.manufacturer = sauceData.manufacturer;
+        sauce.description = sauceData.description;
+        sauce.mainPepper = sauceData.mainPepper;
+        sauce.heat = sauceData.heat;
+
+
+        // Save Sauce in DB and return response message
+        sauce.save()
+            .then(() => res.status(201).json({ message: 'La sauce a bien été modifiée.' }))
+            .catch(error => res.status(400).json({ error }));
+
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+};
