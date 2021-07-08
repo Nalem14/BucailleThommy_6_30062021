@@ -1,6 +1,10 @@
 const express = require("express");
 const cors = require("cors");
+
 const userCtrl = require("./app/controllers/user.controller");
+const sauceCtrl = require("./app/controllers/sauce.controller");
+
+const auth = require("./app/middleware/auth");
 
 const app = express();
 
@@ -31,14 +35,22 @@ db.mongoose
     process.exit();
   });
 
+
+
 /** 
  * Routes
  **/
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to So Pekocko application." });
 });
+// Auth
 app.post("/api/auth/signup", userCtrl.signup);
 app.post("/api/auth/login", userCtrl.login);
+// Sauces
+app.get("/api/sauces", auth, sauceCtrl.list);
+app.get("/api/sauces/:id", auth, sauceCtrl.get);
+
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
