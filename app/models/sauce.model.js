@@ -3,24 +3,18 @@ module.exports = mongoose => {
       {
         userId: {type: String, required: true, ref: 'User'},
         name: {type: String, required: true},
-        manufacturer: String,
-        description: String,
-        mainPepper: String,
-        imageUrl: String,
-        heat: Number,
-        likes: Number,
-        dislikes: Number,
+        manufacturer: {type: String, required: true},
+        description: {type: String, required: true},
+        mainPepper: {type: String, required: true},
+        imageUrl: {type: String, required: true},
+        heat: {type: Number, required: true},
+        likes: {type: Number, default: 0},
+        dislikes: {type: Number, default: 0},
         usersLiked: [{ type : String, ref: 'User' }],
         usersDisliked: [{ type : String, ref: 'User' }]
       },
       { timestamps: true }
     );
-  
-    schema.method("toJSON", function() {
-      const { __v, _id, ...object } = this.toObject();
-      object.id = _id;
-      return object;
-    });
   
     const Sauce = mongoose.model("Sauce", schema);
     return Sauce;
