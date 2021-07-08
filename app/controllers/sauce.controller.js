@@ -144,6 +144,10 @@ exports.update = async (req, res) => {
             return res.status(404).json({ error: "Cette sauce n'existe pas." });
         }
 
+        if(req.body.userId != sauce.userId) {
+            return res.status(403).json({ error: "Vous n'avez pas l'autorisation de modifier cette sauce." });
+        }
+
         // Define data to null
         let sauceData = null;
 
@@ -163,8 +167,6 @@ exports.update = async (req, res) => {
             sauce.imageUrl = "http://localhost:3000/api/image/" + image.name;
         }
 
-        console.log(sauce);
-
         // Update the Sauce object with new datas
         sauce.name = sauceData.name;
         sauce.manufacturer = sauceData.manufacturer;
@@ -182,3 +184,21 @@ exports.update = async (req, res) => {
         res.status(500).json({ error: error });
     }
 };
+
+// Delete sauce
+exports.delete = (req, res) => {
+    Sauce.findById(req.params.id).then(sauce => {
+        // If not exist, return an error
+        if(!sauce) {
+            return res.status(404).json({ error: "Cette sauce n'existe pas." });
+        }
+
+        Sauce.findByIdAndRemove(sauce._id, (err, doc) => {
+            if(err) {
+                return res.status(400).json({ error: err });
+            }
+
+            res.status(200).json({ message: "La sauce a bien été supprimé." });
+        });
+    });
+}
