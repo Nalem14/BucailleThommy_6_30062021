@@ -2,3 +2,4 @@ node_modules/
 .DS_Store
 .pass
 config/db.config.js
+public/
