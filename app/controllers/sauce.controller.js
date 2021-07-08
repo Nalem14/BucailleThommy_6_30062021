@@ -122,13 +122,17 @@ exports.add = (req, res) => {
             heat: sauceData.heat
         });
 
-        // Save Sauce in DB and return response message
-        sauce.save()
-            .then(() => res.status(201).json({ message: 'La sauce a bien été ajoutée.' }))
-            .catch(error => res.status(400).json({ error }));
-
         // Update all sauces to reset likes, dislikes and users ref
-        Sauce.updateMany({ }, { likes: 0, dislikes: 0, usersLiked: [], usersDisliked: [] });
+        Sauce.updateMany({ }, { likes: 0, dislikes: 0, usersLiked: [], usersDisliked: [] }, (err, result) => {
+            if(err) {
+                return res.status(400).json({ error: err });
+            }
+
+            // Save Sauce in DB and return response message
+            sauce.save()
+            .then(() => res.status(201).json({ message: 'La sauce a bien été ajoutée.' }))
+            .catch(error => res.status(400).json({ error: error }));
+        });
 
     } catch (error) {
         res.status(500).json({ error: error });
@@ -142,10 +146,6 @@ exports.update = async (req, res) => {
         // If not exist, return an error
         if(!sauce) {
             return res.status(404).json({ error: "Cette sauce n'existe pas." });
-        }
-
-        if(req.body.userId != sauce.userId) {
-            return res.status(403).json({ error: "Vous n'avez pas l'autorisation de modifier cette sauce." });
         }
 
         // Define data to null
