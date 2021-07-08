@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const userCtrl = require("./app/controllers/user.controller");
 const sauceCtrl = require("./app/controllers/sauce.controller");
+const imageCtrl = require("./app/controllers/image.controller");
 
 const auth = require("./app/middleware/auth");
 
@@ -52,6 +53,8 @@ app.get("/", (req, res) => {
 // Auth
 app.post("/api/auth/signup", userCtrl.signup);
 app.post("/api/auth/login", userCtrl.login);
+// Image
+app.get("/api/image/:image", imageCtrl.get);
 // Sauces
 app.get("/api/sauces", auth, sauceCtrl.list);
 app.get("/api/sauces/:id", auth, sauceCtrl.get);
