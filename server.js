@@ -1,4 +1,5 @@
 const express = require("express");
+const fileUpload = require('express-fileupload');
 const cors = require("cors");
 
 const userCtrl = require("./app/controllers/user.controller");
@@ -11,6 +12,11 @@ const app = express();
 var corsOptions = {
   origin: "http://localhost:4200"
 };
+
+// enable files upload
+app.use(fileUpload({
+  createParentPath: true
+}));
 
 app.use(cors(corsOptions));
 
@@ -49,6 +55,7 @@ app.post("/api/auth/login", userCtrl.login);
 // Sauces
 app.get("/api/sauces", auth, sauceCtrl.list);
 app.get("/api/sauces/:id", auth, sauceCtrl.get);
+app.post("/api/sauces", auth, sauceCtrl.add);
 
 
 
