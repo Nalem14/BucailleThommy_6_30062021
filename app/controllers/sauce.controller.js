@@ -172,7 +172,7 @@ exports.update = async (req, res) => {
             image.mv('./public/images/' + image.name);
 
             // Update imageUrl in Sauce object
-            sauce.imageUrl = "http://localhost:3000/api/image/" + image.name;
+            sauce.imageUrl = image.name;
         }
 
         // Update the Sauce object with new datas
