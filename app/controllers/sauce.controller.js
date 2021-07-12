@@ -126,7 +126,7 @@ exports.add = (req, res) => {
             manufacturer: sauceData.manufacturer,
             description: sauceData.description,
             mainPepper: sauceData.mainPepper,
-            imageUrl: "http://localhost:3000/api/image/" + image.name,
+            imageUrl: image.name,
             heat: sauceData.heat
         });
 
