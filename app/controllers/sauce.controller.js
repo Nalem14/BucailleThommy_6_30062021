@@ -12,6 +12,11 @@ exports.list = (req, res) => {
             return res.status(401).json({ error: "Aucune souce n'est disponible" });
         }
 
+        // Set image URL
+        for(var i = 0; i < datas.length; i++) {
+            datas[i].imageUrl = req.protocol + '://' + req.get('host') + "/api/image/" + datas[i].imageUrl;
+        }
+
         // Return Sauce array
         res.status(200).json(datas);
     })
@@ -26,6 +31,9 @@ exports.get = (req, res) => {
         if(!sauce) {
             return res.status(404).json({ error: "Cette sauce n'existe pas." });
         }
+
+        // Set image URL
+        sauce.imageUrl = req.protocol + '://' + req.get('host') + "/api/image/" + sauce.imageUrl;
 
         // Return the Sauce object
         res.status(200).json(sauce);
@@ -118,7 +126,7 @@ exports.add = (req, res) => {
             manufacturer: sauceData.manufacturer,
             description: sauceData.description,
             mainPepper: sauceData.mainPepper,
-            imageUrl: "http://localhost:3000/api/image/" + image.name,
+            imageUrl: image.name,
             heat: sauceData.heat
         });
 
@@ -164,7 +172,7 @@ exports.update = async (req, res) => {
             image.mv('./public/images/' + image.name);
 
             // Update imageUrl in Sauce object
-            sauce.imageUrl = "http://localhost:3000/api/image/" + image.name;
+            sauce.imageUrl = image.name;
         }
 
         // Update the Sauce object with new datas
