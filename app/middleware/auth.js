@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
     }
   } catch {
     res.status(401).json({
-      error: 'Invalid request!'
+      error: 'Vous n\'êtes pas connecté. Merci de vous authentifier.'
     });
   }
 };
