@@ -1,5 +1,6 @@
 const express = require("express");
-const fileUpload = require('express-fileupload');
+const fileUpload = require("express-fileupload");
+const hateoasLinker = require("express-hateoas-links");
 const cors = require("cors");
 
 const userCtrl = require("./app/controllers/user.controller");
@@ -11,13 +12,18 @@ const auth = require("./app/middleware/auth");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:4200"
+  origin: "http://localhost:4200",
 };
 
 // enable files upload
-app.use(fileUpload({
-  createParentPath: true
-}));
+app.use(
+  fileUpload({
+    createParentPath: true,
+  })
+);
+
+// replace standard express res.json with the new version
+app.use(hateoasLinker);
 
 app.use(cors(corsOptions));
 
@@ -32,19 +38,17 @@ const db = require("./app/models");
 db.mongoose
   .connect(db.url, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log("Connected to the database!");
   })
-  .catch(err => {
+  .catch((err) => {
     console.log("Cannot connect to the database!", err);
     process.exit();
   });
 
-
-
-/** 
+/**
  * Routes
  **/
 app.get("/", (req, res) => {
@@ -62,8 +66,6 @@ app.post("/api/sauces", auth, sauceCtrl.add);
 app.post("/api/sauces/:id/like", auth, sauceCtrl.like);
 app.put("/api/sauces/:id", auth, sauceCtrl.update);
 app.delete("/api/sauces/:id", auth, sauceCtrl.delete);
-
-
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
