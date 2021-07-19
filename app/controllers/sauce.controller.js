@@ -1,6 +1,5 @@
 const db = require("../models");
 const fs = require('fs')
-const stringSanitizer = require("string-sanitizer");
 const Sauce = db.sauce;
 
 // List sauces
@@ -220,10 +219,8 @@ exports.add = (req, res) => {
     let timestamp = Math.floor(Date.now() / 1000);
     // Get image file
     let image = req.files.image;
-    // Separe file name and extension
-    let imageName = image.name.split(".");
     // Define image name
-    image.name = timestamp + stringSanitizer.sanitize(imageName[0]) + "." + stringSanitizer.sanitize(imageName[1]);
+    image.name = timestamp + image.name;
     // Move image to public folder
     image.mv("./public/images/" + image.name);
 
@@ -325,11 +322,8 @@ exports.update = async (req, res) => {
       let timestamp = Math.floor(Date.now() / 1000);
       // Get image file
       let image = req.files.image;
-      // Separe file name and extension
-      let imageName = image.name.split(".");
       // Define image name
-      image.name = timestamp + stringSanitizer.sanitize(imageName[0]) + "." + stringSanitizer.sanitize(imageName[1]);
-      // Move image to public folder
+      image.name = timestamp + image.name;      // Move image to public folder
       image.mv("./public/images/" + image.name);
 
       // Update imageUrl in Sauce object

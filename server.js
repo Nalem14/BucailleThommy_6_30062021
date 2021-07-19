@@ -20,6 +20,9 @@ var corsOptions = {
 app.use(
   fileUpload({
     createParentPath: true,
+    safeFileNames: true,
+    abortOnLimit: true,
+    responseOnLimit: "Taille limite pour l'envoi d'un fichier atteinte"
   })
 );
 
