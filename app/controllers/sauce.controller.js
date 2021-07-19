@@ -217,10 +217,15 @@ exports.add = (req, res) => {
       });
     }
 
-    // Get and move image to public folder
+    // Get current timestamp
     let timestamp = Math.floor(Date.now() / 1000);
+    // Get image file
     let image = req.files.image;
-    image.name = timestamp + "_" + stringSanitizer.sanitize(image.name);
+    // Separe file name and extension
+    let imageName = image.name.split(".");
+    // Define image name
+    image.name = timestamp + "_" + stringSanitizer.sanitize(imageName[0]) + "." + imageName[1];
+    // Move image to public folder
     image.mv("./public/images/" + image.name);
 
     // Create the new Sauce object with datas in request
@@ -313,10 +318,15 @@ exports.update = async (req, res) => {
       // Delete the old image
       fs.unlinkSync("./public/images/" + sauce.imageUrl);
 
-      // Get and move image to public folder
+      // Get current timestamp
       let timestamp = Math.floor(Date.now() / 1000);
+      // Get image file
       let image = req.files.image;
-      image.name = timestamp + "_" + stringSanitizer.sanitize(image.name);
+      // Separe file name and extension
+      let imageName = image.name.split(".");
+      // Define image name
+      image.name = timestamp + "_" + stringSanitizer.sanitize(imageName[0]) + "." + imageName[1];
+      // Move image to public folder
       image.mv("./public/images/" + image.name);
 
       // Update imageUrl in Sauce object
