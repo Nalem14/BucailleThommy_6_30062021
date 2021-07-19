@@ -1,6 +1,5 @@
-const db = require("../models");
+const Sauce = require("../models/sauce.model");
 const fs = require('fs')
-const Sauce = db.sauce;
 
 // List sauces
 exports.list = (req, res) => {

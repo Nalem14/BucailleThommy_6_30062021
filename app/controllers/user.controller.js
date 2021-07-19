@@ -1,9 +1,7 @@
-const db = require("../models");
+const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { passwordStrength } = require('check-password-strength');
-
-const User = db.user;
 
 // Validate email string
 function validateEmail(email) {
