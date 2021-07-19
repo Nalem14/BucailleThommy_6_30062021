@@ -1,12 +1,29 @@
 const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { passwordStrength } = require('check-password-strength')
 
 const User = db.user;
+
+// Validate email string
+function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 
 // Create new User
 exports.signup = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
+
+  // Check password strength
+  if(passwordStrength(req.body.password).value != "Medium" || passwordStrength(req.body.password).value != "Strong") {
+    return res.status(400).json({ error: "Le mot de passe indiqué n'est pas suffisamment sécurisé." })
+  }
+
+  // Check email validation
+  if(!validateEmail(req.body.email)) {
+    return res.status(400).json({ error: "L'email indiqué est invalide." })
+  }
 
   // Encrypt the password send in request
   bcrypt
