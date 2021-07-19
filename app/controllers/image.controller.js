@@ -5,7 +5,8 @@ const stringSanitizer = require("string-sanitizer");
 // List sauces
 exports.get = (req, res) => {
     try {
-        let image = stringSanitizer.sanitize(req.params.image);
+        let imageName = req.params.image.split(".");
+        let image = stringSanitizer.sanitize(imageName[0]) + "." + stringSanitizer.sanitize(imageName[1]);
         res.sendFile(path.resolve(__dirname + "/../../public/images/" + image));
     }
     catch(error) {

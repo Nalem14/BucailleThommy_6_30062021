@@ -17,7 +17,6 @@ exports.list = (req, res) => {
     // Set image URL
     for (var i = 0; i < datas.length; i++) {
       let sauce = datas[i];
-      console.log(sauce);
 
       datas[i].imageUrl = baseUri + "/api/image/" + datas[i].imageUrl;
       datas[i] = { ...sauce._doc, links: [] };
@@ -224,7 +223,7 @@ exports.add = (req, res) => {
     // Separe file name and extension
     let imageName = image.name.split(".");
     // Define image name
-    image.name = timestamp + stringSanitizer.sanitize(imageName[0]) + "." + imageName[1];
+    image.name = timestamp + stringSanitizer.sanitize(imageName[0]) + "." + stringSanitizer.sanitize(imageName[1]);
     // Move image to public folder
     image.mv("./public/images/" + image.name);
 
@@ -316,7 +315,11 @@ exports.update = async (req, res) => {
       sauceData = JSON.parse(req.body.sauce);
 
       // Delete the old image
-      fs.unlinkSync("./public/images/" + sauce.imageUrl);
+      try {
+        fs.unlinkSync("./public/images/" + sauce.imageUrl);
+      }catch(er) {
+        console.log(er);
+      }
 
       // Get current timestamp
       let timestamp = Math.floor(Date.now() / 1000);
@@ -325,7 +328,7 @@ exports.update = async (req, res) => {
       // Separe file name and extension
       let imageName = image.name.split(".");
       // Define image name
-      image.name = timestamp + stringSanitizer.sanitize(imageName[0]) + "." + imageName[1];
+      image.name = timestamp + stringSanitizer.sanitize(imageName[0]) + "." + stringSanitizer.sanitize(imageName[1]);
       // Move image to public folder
       image.mv("./public/images/" + image.name);
 
@@ -394,7 +397,11 @@ exports.delete = (req, res) => {
     }
 
     // Delete the image file
-    fs.unlinkSync("./public/images/" + sauce.imageUrl);
+    try {
+      fs.unlinkSync("./public/images/" + sauce.imageUrl);
+    }catch(er) {
+      console.log(er);
+    }
 
     Sauce.findByIdAndRemove(sauce._id, (err, doc) => {
       if (err) {
