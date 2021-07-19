@@ -16,7 +16,7 @@ exports.signup = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 
   // Check password strength
-  if(passwordStrength(req.body.password).value != "Medium" || passwordStrength(req.body.password).value != "Strong") {
+  if(passwordStrength(req.body.password).value != "Medium" && passwordStrength(req.body.password).value != "Strong") {
     return res.status(400).json({ error: "Le mot de passe indiqué n'est pas suffisamment sécurisé." })
   }
 
