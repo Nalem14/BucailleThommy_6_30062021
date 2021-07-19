@@ -2,6 +2,7 @@ const express = require("express");
 const fileUpload = require("express-fileupload");
 const hateoasLinker = require("express-hateoas-links");
 const cors = require("cors");
+const helmet = require('helmet');
 
 const userCtrl = require("./app/controllers/user.controller");
 const sauceCtrl = require("./app/controllers/sauce.controller");
@@ -21,6 +22,10 @@ app.use(
     createParentPath: true,
   })
 );
+
+// Enable helmet
+app.use(helmet());
+app.disable('x-powered-by');
 
 // replace standard express res.json with the new version
 app.use(hateoasLinker);
