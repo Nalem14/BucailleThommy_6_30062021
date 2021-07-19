@@ -224,7 +224,7 @@ exports.add = (req, res) => {
     // Separe file name and extension
     let imageName = image.name.split(".");
     // Define image name
-    image.name = timestamp + "_" + stringSanitizer.sanitize(imageName[0]) + "." + imageName[1];
+    image.name = timestamp + stringSanitizer.sanitize(imageName[0]) + "." + imageName[1];
     // Move image to public folder
     image.mv("./public/images/" + image.name);
 
@@ -325,7 +325,7 @@ exports.update = async (req, res) => {
       // Separe file name and extension
       let imageName = image.name.split(".");
       // Define image name
-      image.name = timestamp + "_" + stringSanitizer.sanitize(imageName[0]) + "." + imageName[1];
+      image.name = timestamp + stringSanitizer.sanitize(imageName[0]) + "." + imageName[1];
       // Move image to public folder
       image.mv("./public/images/" + image.name);
 
