@@ -214,12 +214,6 @@ exports.add = (req, res) => {
       });
     }
 
-    // Get current timestamp
-    let timestamp = Math.floor(Date.now() / 1000);
-    // Get image file
-    let image = req.files.image;
-    // Define image name
-    image.name = timestamp + image.name;
     // Move image to public folder
     image.mv("./public/images/" + image.name);
 
@@ -317,12 +311,7 @@ exports.update = async (req, res) => {
         console.log(er);
       }
 
-      // Get current timestamp
-      let timestamp = Math.floor(Date.now() / 1000);
-      // Get image file
-      let image = req.files.image;
-      // Define image name
-      image.name = timestamp + image.name;      // Move image to public folder
+      // Move image to public folder
       image.mv("./public/images/" + image.name);
 
       // Update imageUrl in Sauce object
