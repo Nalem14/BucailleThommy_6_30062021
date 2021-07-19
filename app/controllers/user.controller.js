@@ -1,7 +1,7 @@
 const db = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { passwordStrength } = require('check-password-strength')
+const { passwordStrength } = require('check-password-strength');
 
 const User = db.user;
 
