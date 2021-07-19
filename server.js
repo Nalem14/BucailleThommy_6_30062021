@@ -23,7 +23,9 @@ app.use(
     createParentPath: true,
     safeFileNames: true,
     abortOnLimit: true,
-    responseOnLimit: "Taille limite pour l'envoi d'un fichier atteinte"
+    responseOnLimit: "Taille limite pour l'envoi d'un fichier atteinte",
+    useTempFiles: true,
+    tempFileDir: "/tmp/"
   })
 );
 

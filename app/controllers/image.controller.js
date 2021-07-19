@@ -9,6 +9,7 @@ exports.get = (req, res) => {
         res.sendFile(path.resolve(__dirname + "/../../public/images/" + image));
     }
     catch(error) {
+        console.log(error);
         res.status(500).json({ error: error })
     }
 };

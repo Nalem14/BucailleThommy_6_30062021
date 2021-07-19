@@ -205,7 +205,7 @@ exports.like = (req, res) => {
 // Add sauce
 exports.add = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
-
+  console.log(req.body);
   try {
     let sauceData = JSON.parse(req.body.sauce);
 
@@ -216,6 +216,8 @@ exports.add = (req, res) => {
       });
     }
 
+    // Get image file
+    let image = req.files.image;
     // Move image to public folder
     image.mv("./public/images/" + image.name);
 
@@ -280,6 +282,7 @@ exports.add = (req, res) => {
       }
     );
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error });
   }
 };
@@ -313,6 +316,8 @@ exports.update = async (req, res) => {
         console.log(er);
       }
 
+      // Get image file
+      let image = req.files.image;
       // Move image to public folder
       image.mv("./public/images/" + image.name);
 
@@ -366,6 +371,7 @@ exports.update = async (req, res) => {
       )
       .catch((error) => res.status(400).json({ error }));
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error });
   }
 };
