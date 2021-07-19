@@ -1,6 +1,5 @@
 const db = require("../models");
 var path = require('path');
-const Sauce = db.sauce;
 const stringSanitizer = require("string-sanitizer");
 
 // List sauces

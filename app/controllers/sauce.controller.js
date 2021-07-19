@@ -2,7 +2,6 @@ const db = require("../models");
 const fs = require('fs')
 const stringSanitizer = require("string-sanitizer");
 const Sauce = db.sauce;
-const User = db.user;
 
 // List sauces
 exports.list = (req, res) => {
