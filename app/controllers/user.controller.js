@@ -1,4 +1,6 @@
-const User = require("../models/user.model");
+const mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
+const User = require("../models/user.model")(mongoose);
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { passwordStrength } = require('check-password-strength');

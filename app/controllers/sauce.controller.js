@@ -1,4 +1,6 @@
-const Sauce = require("../models/sauce.model");
+const mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
+const Sauce = require("../models/sauce.model")(mongoose);
 const fs = require('fs')
 
 // List sauces

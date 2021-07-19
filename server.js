@@ -9,8 +9,9 @@ const app = express();
 
 require('dotenv').config();
 
-// Routes
-app.use(routes);
+/**
+ * Settings
+ **/
 
 var corsOptions = {
   origin: "http://localhost:4200",
@@ -40,6 +41,10 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// Define routes
+app.use(routes);
+
 
 // Connect databse
 const db = require("./config/db.config");
