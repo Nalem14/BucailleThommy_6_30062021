@@ -1,4 +1,5 @@
 # BucailleThommy_6_30062021
+[![Known Vulnerabilities](https://snyk.io/test/github/Nalem14/BucailleThommy_6_30062021/badge.svg)](https://snyk.io/test/github/Nalem14/BucailleThommy_6_30062021)
 
 ## Required
 * Node 14.16.x
