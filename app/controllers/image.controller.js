@@ -1,4 +1,3 @@
-const db = require("../models");
 var path = require('path');
 const stringSanitizer = require("string-sanitizer");
 
