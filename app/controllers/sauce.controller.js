@@ -19,7 +19,7 @@ exports.list = (req, res) => {
       datas[i].imageUrl = baseUri + "/api/image/" + datas[i].imageUrl;
       datas[i] = { ...sauce._doc, links: [] };
       datas[i].links = [
-        { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
         {
           rel: "create",
           method: "POST",
@@ -27,12 +27,12 @@ exports.list = (req, res) => {
           href: baseUri + "/api/sauces",
         },
         {
-          rel: "self",
+          rel: "readOne",
           method: "GET",
           href: baseUri + "/api/sauces/" + sauce._id,
         },
         {
-          rel: "modify",
+          rel: "update",
           method: "PUT",
           title: "Modify Sauce",
           href: baseUri + "/api/sauces/" + sauce._id,
@@ -73,7 +73,7 @@ exports.get = (req, res) => {
 
     // Return the Sauce object
     res.status(200).json(sauce, [
-      { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+      { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
       {
         rel: "create",
         method: "POST",
@@ -81,12 +81,12 @@ exports.get = (req, res) => {
         href: baseUri + "/api/sauces",
       },
       {
-        rel: "self",
+        rel: "readOne",
         method: "GET",
         href: baseUri + "/api/sauces/" + sauce._id,
       },
       {
-        rel: "modify",
+        rel: "update",
         method: "PUT",
         title: "Modify Sauce",
         href: baseUri + "/api/sauces/" + sauce._id,
@@ -164,7 +164,7 @@ exports.like = (req, res) => {
     Sauce.findByIdAndUpdate(sauce._id, sauce)
       .then(() =>
         res.status(200).json({ message: "Votre like a été mis à jour." }, [
-          { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+          { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
           {
             rel: "create",
             method: "POST",
@@ -172,12 +172,12 @@ exports.like = (req, res) => {
             href: baseUri + "/api/sauces",
           },
           {
-            rel: "self",
+            rel: "readOne",
             method: "GET",
             href: baseUri + "/api/sauces/" + sauce._id,
           },
           {
-            rel: "modify",
+            rel: "update",
             method: "PUT",
             title: "Modify Sauce",
             href: baseUri + "/api/sauces/" + sauce._id,
@@ -248,7 +248,7 @@ exports.add = (req, res) => {
           .save()
           .then(() =>
             res.status(201).json({ message: "La sauce a bien été ajoutée." }, [
-              { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+              { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
               {
                 rel: "create",
                 method: "POST",
@@ -256,12 +256,12 @@ exports.add = (req, res) => {
                 href: baseUri + "/api/sauces",
               },
               {
-                rel: "self",
+                rel: "readOne",
                 method: "GET",
                 href: baseUri + "/api/sauces/" + sauce._id,
               },
               {
-                rel: "modify",
+                rel: "update",
                 method: "PUT",
                 title: "Modify Sauce",
                 href: baseUri + "/api/sauces/" + sauce._id,
@@ -341,7 +341,7 @@ exports.update = async (req, res) => {
       .save()
       .then(() =>
         res.status(201).json({ message: "La sauce a bien été modifiée." }, [
-          { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+          { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
           {
             rel: "create",
             method: "POST",
@@ -349,12 +349,12 @@ exports.update = async (req, res) => {
             href: baseUri + "/api/sauces",
           },
           {
-            rel: "self",
+            rel: "readOne",
             method: "GET",
             href: baseUri + "/api/sauces/" + sauce._id,
           },
           {
-            rel: "modify",
+            rel: "update",
             method: "PUT",
             title: "Modify Sauce",
             href: baseUri + "/api/sauces/" + sauce._id,
@@ -402,7 +402,7 @@ exports.delete = (req, res) => {
       }
 
       res.status(200).json({ message: "La sauce a bien été supprimé." }, [
-        { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
         {
           rel: "create",
           method: "POST",
@@ -410,12 +410,12 @@ exports.delete = (req, res) => {
           href: baseUri + "/api/sauces",
         },
         {
-          rel: "self",
+          rel: "readOne",
           method: "GET",
           href: baseUri + "/api/sauces/" + sauce._id,
         },
         {
-          rel: "modify",
+          rel: "update",
           method: "PUT",
           title: "Modify Sauce",
           href: baseUri + "/api/sauces/" + sauce._id,
