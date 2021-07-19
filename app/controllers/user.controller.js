@@ -53,7 +53,7 @@ exports.login = (req, res) => {
       if (!user) {
         return res
           .status(401)
-          .json({ error: "Votre compte utilisateur n'as pas pu être trouvé." });
+          .json({ error: "Les identifiants fournis ne correspondent pas." });
       }
 
       // Check if the password in DB is equal to the password in request
@@ -64,7 +64,7 @@ exports.login = (req, res) => {
           if (!valid) {
             return res
               .status(401)
-              .json({ error: "Le mot de passe indiqué est incorrecte." });
+              .json({ error: "Les identifiants fournis ne correspondent pas." });
           }
 
           // If all is fine, return the userId and Auth token

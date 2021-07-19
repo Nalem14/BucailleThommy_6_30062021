@@ -1,4 +1,5 @@
 const db = require("../models");
+const fs = require('fs')
 const Sauce = db.sauce;
 const User = db.user;
 
@@ -217,7 +218,9 @@ exports.add = (req, res) => {
     }
 
     // Get and move image to public folder
+    let timestamp = Math.floor(Date.now() / 1000);
     let image = req.files.image;
+    image.name = timestamp + "_" + image.name;
     image.mv("./public/images/" + image.name);
 
     // Create the new Sauce object with datas in request
@@ -307,6 +310,9 @@ exports.update = async (req, res) => {
       // If request contain image, sauce datas are in body.sauce
       sauceData = JSON.parse(req.body.sauce);
 
+      // Delete the old image
+      fs.unlinkSync("./public/images/" + sauce.imageUrl);
+
       // Get and move image to public folder
       let image = req.files.image;
       image.mv("./public/images/" + image.name);
@@ -374,6 +380,9 @@ exports.delete = (req, res) => {
     if (!sauce) {
       return res.status(404).json({ error: "Cette sauce n'existe pas." });
     }
+
+    // Delete the image file
+    fs.unlinkSync("./public/images/" + sauce.imageUrl);
 
     Sauce.findByIdAndRemove(sauce._id, (err, doc) => {
       if (err) {
