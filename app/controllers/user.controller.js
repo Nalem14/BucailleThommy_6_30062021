@@ -90,7 +90,7 @@ exports.login = (req, res) => {
               userId: user._id,
               token: jwt.sign(
                 { userId: user._id },
-                "sbcL5tx568Wnntebf8wZn1mlctd6wIw9",
+                process.env.SECRET,
                 { expiresIn: "24h" }
               ),
             },
