@@ -4,7 +4,7 @@ const stringSanitizer = require("string-sanitizer");
 module.exports = async (req, res, next) => {
   try {
     // Check if request contain files uploaded
-    if (!req.files) {
+    if (!req.files || !req.files.image) {
         return next();
     }
 
