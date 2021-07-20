@@ -23,8 +23,7 @@ module.exports = async (req, res, next) => {
     // Get current timestamp
     let timestamp = Math.floor(Date.now() / 1000);
     // Define image name
-    image.name = stringSanitizer.sanitize(image.name);
-    image.name = timestamp + image.name.replace(fileType.ext, "." + fileType.ext);
+    image.name = timestamp + "." + fileType.ext;
     next();
 
   } catch(err) {
