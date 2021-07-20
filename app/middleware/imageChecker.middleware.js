@@ -12,11 +12,13 @@ module.exports = async (req, res, next) => {
 
     // Check file type
     let fileType = await FileType.fromFile(image.tempFilePath);
+    if(!fileType)
+      throw "Format de fichier non reconnu.";
     let mimetype = fileType.mime;
 
     // Check file extension
     if(mimetype != "image/png" && mimetype != "image/jpg" && mimetype != "image/jpeg" && mimetype != "image/gif") {
-        throw "Merci d'envoyer une image valide (format JPG/JPEG, GIF ou PNG)";
+      throw "Merci d'envoyer une image valide (format JPG/JPEG, GIF ou PNG)";
     }
 
     // Get current timestamp
@@ -26,6 +28,7 @@ module.exports = async (req, res, next) => {
     next();
 
   } catch(err) {
+    console.error(err);
     res.status(401).json({
       error: err
     });
