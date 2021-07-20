@@ -1,5 +1,4 @@
 const FileType = require('file-type');
-const stringSanitizer = require("string-sanitizer");
 
 module.exports = async (req, res, next) => {
   try {
