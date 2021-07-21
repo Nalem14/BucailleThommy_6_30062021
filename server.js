@@ -5,7 +5,7 @@ const cors = require("cors");
 const helmet = require('helmet');
 const routes = require("./app/routes");
 const tooBusyMiddleware = require("./app/middleware/tooBusy.middleware");
-
+const hpp = require('hpp');
 const app = express();
 
 require('dotenv').config();
@@ -47,6 +47,9 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// Protect HTTP Parameters Pollution
+app.use(hpp());
 
 // Serve public folder
 app.use(express.static(__dirname + "/public"));
