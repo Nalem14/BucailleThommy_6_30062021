@@ -4,6 +4,7 @@ const User = require("../models/user.model")(mongoose);
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { passwordStrength } = require('check-password-strength');
+const bouncer = require('express-bouncer');
 
 // Validate email string
 function validateEmail(email) {
@@ -38,7 +39,8 @@ exports.signup = (req, res) => {
       // Save the user and return a response
       user
         .save()
-        .then(() =>
+        .then(() => {
+          bouncer.reset(req);
           res.status(201).json({ message: "Votre compte a bien été créé." }, [
             {
               rel: "create",
@@ -52,8 +54,8 @@ exports.signup = (req, res) => {
               title: "Login User",
               href: baseUri + "/api/auth/login",
             },
-          ])
-        )
+          ]);
+        })
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
@@ -85,6 +87,7 @@ exports.login = (req, res) => {
           }
 
           // If all is fine, return the userId and Auth token
+          bouncer.reset(req);
           res.status(200).json(
             {
               userId: user._id,
