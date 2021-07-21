@@ -28,6 +28,7 @@
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.0",
-    "string-sanitizer": "^2.0.2"
+    "string-sanitizer": "^2.0.2",
+    "toobusy-js": "^0.5.1"
   }
 }

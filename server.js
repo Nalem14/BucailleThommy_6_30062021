@@ -4,6 +4,7 @@ const hateoasLinker = require("express-hateoas-links");
 const cors = require("cors");
 const helmet = require('helmet');
 const routes = require("./app/routes");
+const tooBusyMiddleware = require("./app/middleware/tooBusy.middleware");
 
 const app = express();
 
@@ -16,6 +17,8 @@ require('dotenv').config();
 var corsOptions = {
   origin: "http://localhost:4200",
 };
+
+app.use(tooBusyMiddleware());
 
 // enable files upload
 app.use(
