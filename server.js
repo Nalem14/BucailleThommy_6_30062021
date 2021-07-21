@@ -18,7 +18,7 @@ var corsOptions = {
   origin: "http://localhost:4200",
 };
 
-app.use(tooBusyMiddleware());
+app.use(tooBusyMiddleware);
 
 // enable files upload
 app.use(

@@ -4,7 +4,7 @@ const User = require("../models/user.model")(mongoose);
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { passwordStrength } = require('check-password-strength');
-const bouncer = require('express-bouncer');
+const bouncer = require('express-bouncer')(5000, 900000, 3);
 
 // Validate email string
 function validateEmail(email) {
