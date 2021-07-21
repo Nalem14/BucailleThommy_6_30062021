@@ -1,6 +1,7 @@
-const db = require("../models");
-const Sauce = db.sauce;
-const User = db.user;
+const mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
+const Sauce = require("../models/sauce.model")(mongoose);
+const fs = require('fs')
 
 // List sauces
 exports.list = (req, res) => {
@@ -16,12 +17,11 @@ exports.list = (req, res) => {
     // Set image URL
     for (var i = 0; i < datas.length; i++) {
       let sauce = datas[i];
-      console.log(sauce);
 
       datas[i].imageUrl = baseUri + "/api/image/" + datas[i].imageUrl;
       datas[i] = { ...sauce._doc, links: [] };
       datas[i].links = [
-        { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
         {
           rel: "create",
           method: "POST",
@@ -29,12 +29,12 @@ exports.list = (req, res) => {
           href: baseUri + "/api/sauces",
         },
         {
-          rel: "self",
+          rel: "readOne",
           method: "GET",
           href: baseUri + "/api/sauces/" + sauce._id,
         },
         {
-          rel: "modify",
+          rel: "update",
           method: "PUT",
           title: "Modify Sauce",
           href: baseUri + "/api/sauces/" + sauce._id,
@@ -75,7 +75,7 @@ exports.get = (req, res) => {
 
     // Return the Sauce object
     res.status(200).json(sauce, [
-      { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+      { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
       {
         rel: "create",
         method: "POST",
@@ -83,12 +83,12 @@ exports.get = (req, res) => {
         href: baseUri + "/api/sauces",
       },
       {
-        rel: "self",
+        rel: "readOne",
         method: "GET",
         href: baseUri + "/api/sauces/" + sauce._id,
       },
       {
-        rel: "modify",
+        rel: "update",
         method: "PUT",
         title: "Modify Sauce",
         href: baseUri + "/api/sauces/" + sauce._id,
@@ -166,7 +166,7 @@ exports.like = (req, res) => {
     Sauce.findByIdAndUpdate(sauce._id, sauce)
       .then(() =>
         res.status(200).json({ message: "Votre like a été mis à jour." }, [
-          { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+          { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
           {
             rel: "create",
             method: "POST",
@@ -174,12 +174,12 @@ exports.like = (req, res) => {
             href: baseUri + "/api/sauces",
           },
           {
-            rel: "self",
+            rel: "readOne",
             method: "GET",
             href: baseUri + "/api/sauces/" + sauce._id,
           },
           {
-            rel: "modify",
+            rel: "update",
             method: "PUT",
             title: "Modify Sauce",
             href: baseUri + "/api/sauces/" + sauce._id,
@@ -205,7 +205,7 @@ exports.like = (req, res) => {
 // Add sauce
 exports.add = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
-
+  console.log(req.body);
   try {
     let sauceData = JSON.parse(req.body.sauce);
 
@@ -216,8 +216,9 @@ exports.add = (req, res) => {
       });
     }
 
-    // Get and move image to public folder
+    // Get image file
     let image = req.files.image;
+    // Move image to public folder
     image.mv("./public/images/" + image.name);
 
     // Create the new Sauce object with datas in request
@@ -245,7 +246,7 @@ exports.add = (req, res) => {
           .save()
           .then(() =>
             res.status(201).json({ message: "La sauce a bien été ajoutée." }, [
-              { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+              { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
               {
                 rel: "create",
                 method: "POST",
@@ -253,12 +254,12 @@ exports.add = (req, res) => {
                 href: baseUri + "/api/sauces",
               },
               {
-                rel: "self",
+                rel: "readOne",
                 method: "GET",
                 href: baseUri + "/api/sauces/" + sauce._id,
               },
               {
-                rel: "modify",
+                rel: "update",
                 method: "PUT",
                 title: "Modify Sauce",
                 href: baseUri + "/api/sauces/" + sauce._id,
@@ -281,6 +282,7 @@ exports.add = (req, res) => {
       }
     );
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error });
   }
 };
@@ -307,8 +309,16 @@ exports.update = async (req, res) => {
       // If request contain image, sauce datas are in body.sauce
       sauceData = JSON.parse(req.body.sauce);
 
-      // Get and move image to public folder
+      // Delete the old image
+      try {
+        fs.unlinkSync("./public/images/" + sauce.imageUrl);
+      }catch(er) {
+        console.log(er);
+      }
+
+      // Get image file
       let image = req.files.image;
+      // Move image to public folder
       image.mv("./public/images/" + image.name);
 
       // Update imageUrl in Sauce object
@@ -327,7 +337,7 @@ exports.update = async (req, res) => {
       .save()
       .then(() =>
         res.status(201).json({ message: "La sauce a bien été modifiée." }, [
-          { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+          { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
           {
             rel: "create",
             method: "POST",
@@ -335,12 +345,12 @@ exports.update = async (req, res) => {
             href: baseUri + "/api/sauces",
           },
           {
-            rel: "self",
+            rel: "readOne",
             method: "GET",
             href: baseUri + "/api/sauces/" + sauce._id,
           },
           {
-            rel: "modify",
+            rel: "update",
             method: "PUT",
             title: "Modify Sauce",
             href: baseUri + "/api/sauces/" + sauce._id,
@@ -361,6 +371,7 @@ exports.update = async (req, res) => {
       )
       .catch((error) => res.status(400).json({ error }));
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error: error });
   }
 };
@@ -375,13 +386,20 @@ exports.delete = (req, res) => {
       return res.status(404).json({ error: "Cette sauce n'existe pas." });
     }
 
+    // Delete the image file
+    try {
+      fs.unlinkSync("./public/images/" + sauce.imageUrl);
+    }catch(er) {
+      console.log(er);
+    }
+
     Sauce.findByIdAndRemove(sauce._id, (err, doc) => {
       if (err) {
         return res.status(400).json({ error: err });
       }
 
       res.status(200).json({ message: "La sauce a bien été supprimé." }, [
-        { rel: "list", method: "GET", href: baseUri + "/api/sauces" },
+        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
         {
           rel: "create",
           method: "POST",
@@ -389,12 +407,12 @@ exports.delete = (req, res) => {
           href: baseUri + "/api/sauces",
         },
         {
-          rel: "self",
+          rel: "readOne",
           method: "GET",
           href: baseUri + "/api/sauces/" + sauce._id,
         },
         {
-          rel: "modify",
+          rel: "update",
           method: "PUT",
           title: "Modify Sauce",
           href: baseUri + "/api/sauces/" + sauce._id,

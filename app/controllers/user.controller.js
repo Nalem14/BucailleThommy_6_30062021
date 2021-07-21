@@ -1,12 +1,29 @@
-const db = require("../models");
+const mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
+const User = require("../models/user.model")(mongoose);
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { passwordStrength } = require('check-password-strength');
 
-const User = db.user;
+// Validate email string
+function validateEmail(email) {
+  const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+}
 
 // Create new User
 exports.signup = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
+
+  // Check password strength
+  if(passwordStrength(req.body.password).value != "Medium" && passwordStrength(req.body.password).value != "Strong") {
+    return res.status(400).json({ error: "Le mot de passe indiqué n'est pas suffisamment sécurisé." })
+  }
+
+  // Check email validation
+  if(!validateEmail(req.body.email)) {
+    return res.status(400).json({ error: "L'email indiqué est invalide." })
+  }
 
   // Encrypt the password send in request
   bcrypt
@@ -53,7 +70,7 @@ exports.login = (req, res) => {
       if (!user) {
         return res
           .status(401)
-          .json({ error: "Votre compte utilisateur n'as pas pu être trouvé." });
+          .json({ error: "Les identifiants fournis ne correspondent pas." });
       }
 
       // Check if the password in DB is equal to the password in request
@@ -64,7 +81,7 @@ exports.login = (req, res) => {
           if (!valid) {
             return res
               .status(401)
-              .json({ error: "Le mot de passe indiqué est incorrecte." });
+              .json({ error: "Les identifiants fournis ne correspondent pas." });
           }
 
           // If all is fine, return the userId and Auth token
@@ -73,7 +90,7 @@ exports.login = (req, res) => {
               userId: user._id,
               token: jwt.sign(
                 { userId: user._id },
-                "sbcL5tx568Wnntebf8wZn1mlctd6wIw9",
+                process.env.SECRET,
                 { expiresIn: "24h" }
               ),
             },
