@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const usersRoutes = require("./users.routes");
 const saucesRoutes = require("./sauces.routes");
-const imagesRoutes = require("./images.routes");
 const authMiddleware = require("../middleware/auth.middleware");
 const imageCheckerMiddleware = require("../middleware/imageChecker.middleware");
 const bouncer = require('express-bouncer')(5000, 900000, 3);
@@ -16,6 +15,5 @@ bouncer.blocked = function (req, res, next, remaining) {
 
 router.use("/api/sauces", authMiddleware, imageCheckerMiddleware, saucesRoutes);
 router.use("/api/auth", bouncer.block, usersRoutes);
-router.use("/api/image", imagesRoutes);
 
 module.exports = router;

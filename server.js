@@ -28,7 +28,8 @@ app.use(
     abortOnLimit: true,
     responseOnLimit: "Taille limite pour l'envoi d'un fichier atteinte",
     useTempFiles: true,
-    tempFileDir: "/tmp/"
+    tempFileDir: "/tmp/",
+    limits: { fileSize: '1mb' },
   })
 );
 
@@ -46,6 +47,9 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// Serve public folder
+app.use(express.static(__dirname + "/public"));
 
 // Define routes
 app.use(routes);
