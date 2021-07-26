@@ -18,7 +18,7 @@ exports.list = (req, res) => {
     for (var i = 0; i < datas.length; i++) {
       let sauce = datas[i];
 
-      datas[i].imageUrl = baseUri + "/api/image/" + datas[i].imageUrl;
+      datas[i].imageUrl = baseUri + "/images/" + datas[i].imageUrl;
       datas[i] = { ...sauce._doc, links: [] };
       datas[i].links = [
         { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
@@ -71,7 +71,7 @@ exports.get = (req, res) => {
     }
 
     // Set image URL
-    sauce.imageUrl = baseUri + "/api/image/" + sauce.imageUrl;
+    sauce.imageUrl = baseUri + "/images/" + sauce.imageUrl;
 
     // Return the Sauce object
     res.status(200).json(sauce, [

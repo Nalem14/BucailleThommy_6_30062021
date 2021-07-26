@@ -4,7 +4,8 @@ const hateoasLinker = require("express-hateoas-links");
 const cors = require("cors");
 const helmet = require('helmet');
 const routes = require("./app/routes");
-
+const tooBusyMiddleware = require("./app/middleware/tooBusy.middleware");
+const hpp = require('hpp');
 const app = express();
 
 require('dotenv').config();
@@ -17,6 +18,8 @@ var corsOptions = {
   origin: "http://localhost:4200",
 };
 
+app.use(tooBusyMiddleware);
+
 // enable files upload
 app.use(
   fileUpload({
@@ -25,7 +28,8 @@ app.use(
     abortOnLimit: true,
     responseOnLimit: "Taille limite pour l'envoi d'un fichier atteinte",
     useTempFiles: true,
-    tempFileDir: "/tmp/"
+    tempFileDir: "/tmp/",
+    limits: { fileSize: '1mb' },
   })
 );
 
@@ -43,6 +47,12 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+// Protect HTTP Parameters Pollution
+app.use(hpp());
+
+// Serve public folder
+app.use(express.static(__dirname + "/public"));
 
 // Define routes
 app.use(routes);
