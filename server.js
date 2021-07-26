@@ -7,6 +7,8 @@ const routes = require("./app/routes");
 const tooBusyMiddleware = require("./app/middleware/tooBusy.middleware");
 const hpp = require('hpp');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
 
 require('dotenv').config();
 
@@ -56,6 +58,19 @@ app.use(express.static(__dirname + "/public"));
 
 // Define routes
 app.use(routes);
+
+// Documentation
+const openapiSpecification = swaggerJsdoc({
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'SoPekocko API',
+      version: '1.0.0',
+    },
+  },
+  apis: ['./app/routes/*.routes.js'], // files containing annotations as above
+});
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiSpecification));
 
 
 // Connect databse
