@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { passwordStrength } = require('check-password-strength');
 const bouncer = require('express-bouncer')(5000, 900000, 3);
+const { pwnedPassword } = require('hibp');
 
 // Validate email string
 function validateEmail(email) {
@@ -13,7 +14,7 @@ function validateEmail(email) {
 }
 
 // Create new User
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 
   // Check password strength
@@ -24,6 +25,12 @@ exports.signup = (req, res) => {
   // Check email validation
   if(!validateEmail(req.body.email)) {
     return res.status(400).json({ error: "L'email indiqué est invalide." })
+  }
+
+  // Check pwned password
+  let nbPwned = await pwnedPassword(req.body.password);
+  if(nbPwned > 0) {
+    return res.status(400).json({ error: "Ce mot de passe n'est pas sécurisé." });
   }
 
   // Encrypt the password send in request
