@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   title: "SoPekocko API"
-  description: ""
+  description: "List of all routes availables for the API"
   version: "1.0"
 produces: ["application/json"]
 
@@ -26,7 +26,7 @@ components:
           description: The user password.
           example: "1234"
   
-    Sauce:
+    SaucePost:
       type: object
       properties:
         userId:
@@ -50,6 +50,48 @@ components:
         heat:
           type: integer
           description: The sauce heat
+    SauceGet:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: "The owner user id"
+        name:
+          type: string
+          description: "The sauce name"
+        manufacturer:
+          type: string
+          description: "The sauce manufacturer"
+        description:
+          type: string
+          description: "The sauce description"
+        mainPepper:
+          type: string
+          description: "The sauce main pepper"
+        imageUrl:
+          type: string
+          description: "The sauce image URL"
+        heat:
+          type: integer
+          description: The sauce heat
+        likes:
+          type: integer
+          description: The number of likes
+        dislikes:
+          type: integer
+          description: The number of dislikes
+        usersLiked:
+          type: array
+          description: Array of users liked
+          items:
+            type: string
+            description: User ID
+        usersDisliked:
+          type: array
+          description: Array of users disliked
+          items:
+            type: string
+            description: User ID
       
 
 paths:
@@ -139,7 +181,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/components/schemas/Sauce'
+              $ref: '#/components/schemas/SauceGet'
 
         401:
           description: 'An error object'
@@ -149,6 +191,7 @@ paths:
               error:
                 type: string
                 example: "Aucune sauce n'est disponible"
+    # Create
     post:
       summary: "Create Sauce"
       description: "Create a new sauce"
@@ -160,7 +203,7 @@ paths:
           name: sauce
           description: "The Sauce object"
           schema:
-            $ref: '#/components/schemas/Sauce'
+            $ref: '#/components/schemas/SaucePost'
       responses:
         201:
           description: "A message object"
@@ -179,6 +222,43 @@ paths:
               error:
                 type: string
                 example: "Error message"
+        500:
+          description: 'Unexpected error'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error message"
+  # Get specific sauce
+  /api/sauces/{id}:
+    get:
+      summary: "Get specific Sauce"
+      description: "Get a Sauce by id"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          description: The sauce ID
+          in: path
+          required: true
+          type: integer
+          example: 60e6d87e80ef5f71eaa28a2a
+      responses:
+        200:
+          description: "A Sauce object"
+          schema:
+            $ref: '#/components/schemas/SauceGet'
+
+        404:
+          description: 'An error object'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Cette sauce n'exsite pas."
         500:
           description: 'Unexpected error'
           schema:
