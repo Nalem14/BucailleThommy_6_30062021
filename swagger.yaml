@@ -19,6 +19,9 @@ components:
   schemas:
     User:
       type: object
+      required:
+        - email
+        - password
       properties:
         email:
           type: string
@@ -31,12 +34,13 @@ components:
   
     SaucePost:
       type: object
-      requestBody:
-        content:
-          image/*:
-            schema:
-              type: string
-              format: binary
+      required:
+        - userId
+        - name
+        - manufacturer
+        - description
+        - mainPepper
+        - heat
       properties:
         userId:
           type: integer
@@ -56,6 +60,10 @@ components:
         heat:
           type: integer
           description: The sauce heat
+        image:
+          type: string
+          format: binary
+          description: The image file
     SauceGet:
       type: object
       properties:
@@ -204,9 +212,13 @@ paths:
       requestBody:
         description: "The Sauce object"
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/SaucePost'
+              properties:
+                sauce:
+                  description: "The Sauce object"
+                  type: object
+                  $ref: '#/components/schemas/SaucePost'
       responses:
         201:
           description: "A message object"
@@ -275,11 +287,17 @@ paths:
       security:
         - bearerAuth: []
       requestBody:
-        description: "The Sauce object"
         content:
           application/json:
             schema:
+              type: object
               $ref: '#/components/schemas/SaucePost'
+          multipart/form-data:
+            schema:
+              properties:
+                sauce:
+                  description: "The Sauce object"
+                  $ref: '#/components/schemas/SaucePost'
       responses:
         201:
           description: "A message object"
@@ -360,7 +378,6 @@ paths:
         content:
           application/json:
             schema:
-              type: object
               properties:
                 like:
                   description: "Like value (1 = like, 0 = cancel, -1 = dislike)"
