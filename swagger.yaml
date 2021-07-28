@@ -60,6 +60,8 @@ components:
         heat:
           type: integer
           description: The sauce heat
+          minimum: 1
+          maximum: 10
     SauceGet:
       type: object
       properties:
