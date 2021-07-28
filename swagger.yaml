@@ -149,3 +149,41 @@ paths:
               error:
                 type: string
                 example: "Aucune sauce n'est disponible"
+    post:
+      summary: "Create Sauce"
+      description: "Create a new sauce"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: body
+          name: sauce
+          description: "The Sauce object"
+          schema:
+            $ref: '#/components/schemas/Sauce'
+      responses:
+        201:
+          description: "A message object"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "La sauce a bien été ajoutée."
+
+        400:
+          description: 'An error object'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error message"
+        500:
+          description: 'Unexpected error'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error message"
