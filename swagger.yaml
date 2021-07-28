@@ -1,5 +1,6 @@
 ### Main config ###
-swagger: "2.0"
+#swagger: "2.0"
+openapi: '3.0.3'
 info:
   title: "SoPekocko API"
   description: "List of all routes availables for the API"
@@ -285,6 +286,8 @@ paths:
           required: true
           type: integer
           example: 1
+          minimum: -1
+          maximum: 1
       responses:
         200:
           description: "A message object"
