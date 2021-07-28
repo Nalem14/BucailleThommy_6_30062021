@@ -12,13 +12,13 @@ router.post("/signup", userController.signup);
  *       - application/json
  *     parameters:
  *       - name: email
- *         in: body
- *         required: true
- *         type: string
- *       - name: password
- *         in: body
- *         required: true
- *         type: string
+          in: body
+          required: true
+          type: string
+        - name: password
+          in: body
+          required: true
+          type: string
  */
 router.post("/login", userController.login);
 

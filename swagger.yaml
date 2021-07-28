@@ -1,0 +1,151 @@
+### Main config ###
+swagger: "2.0"
+info:
+  title: "SoPekocko API"
+  description: ""
+  version: "1.0"
+produces: ["application/json"]
+
+### Components ###
+components:
+  securitySchemes:
+    bearerAuth:           # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          description: The user email.
+          example: "john.doe@mail.tld"
+        password:
+          type: string
+          description: The user password.
+          example: "1234"
+  
+    Sauce:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: "The owner user id"
+        name:
+          type: string
+          description: "The sauce name"
+        manufacturer:
+          type: string
+          description: "The sauce manufacturer"
+        description:
+          type: string
+          description: "The sauce description"
+        mainPepper:
+          type: string
+          description: "The sauce main pepper"
+        imageUrl:
+          type: string
+          description: "The sauce image URL"
+        heat:
+          type: integer
+          description: The sauce heat
+      
+
+paths:
+  ### USERS ###
+  # Signup
+  /api/auth/signup:
+    post:
+      summary: "Create a user"
+      description: "Create a new user and return a message"
+      tags: ["Users"]
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: 
+          description: "The user to create"
+          schema:
+            $ref: '#/components/schemas/User'
+
+      responses:
+        201:
+          description: 'A message object'
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Votre compte a bien été créé."
+        401:
+          description: 'An error object'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error message"
+        500:
+          description: "Unexpected error"
+
+  # Login
+  /api/auth/login:
+    post:
+      summary: "Login a user"
+      description: "Return User object with userId and auth token"
+      tags: ["Users"]
+      parameters:
+        - in: body
+          name: 
+          description: "The user to login"
+          schema:
+            $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: 'An object with user ID and auth token'
+          schema:
+            type: object
+            properties:
+              userId:
+                type: string
+                example: "324567UJYGBFDVSTDFYGJ"
+              token:
+                type: string
+                example: "EFRGHJKTR345678UYTHGFD"
+        401:
+          description: 'An error object'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Les identifiants fournis ne correspondent pas."
+        500:
+          description: "Unexpected error"
+
+  ### SAUCES ###
+  /api/sauces:
+    # List
+    get:
+      summary: "List all Sauces"
+      description: "Return an array of all Sauces object"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: "Return an array with each sauces"
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Sauce'
+
+        401:
+          description: 'An error object'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Aucune sauce n'est disponible"

@@ -2,34 +2,6 @@ const express = require("express");
 const router = express.Router();
 const sauceCtrl = require("../controllers/sauce.controller");
 
-/**
- * @openapi
- * 
- * components:
- *   securitySchemes:
- *     bearerAuth:           # arbitrary name for the security scheme
- *       type: http
- *       scheme: bearer
- *       bearerFormat: JWT    # optional, arbitrary value for documentation purposes
- */
-
-/**
- * @swagger
- * 
- * /api/sauces:
- *   get:
- *     produces:
- *       - application/json
- *     tags: [Sauces]
- *     description: Get the list of all sauces
- *     security:
- *         - bearerAuth: []
- *     responses:
- *       200:
- *         description: Return an array with each sauces
- *       401:
- *         description: Return an object with a error message
- */
 router.get("/", sauceCtrl.list);
 
 /**

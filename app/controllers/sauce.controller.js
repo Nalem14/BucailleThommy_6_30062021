@@ -205,7 +205,7 @@ exports.like = (req, res) => {
 // Add sauce
 exports.add = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
-  console.log(req.body);
+
   try {
     let sauceData = JSON.parse(req.body.sauce);
 
