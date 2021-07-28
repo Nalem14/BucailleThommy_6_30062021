@@ -182,7 +182,6 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/SauceGet'
-
         401:
           description: 'An error object'
           schema:
@@ -213,7 +212,6 @@ paths:
               message:
                 type: string
                 example: "La sauce a bien été ajoutée."
-
         400:
           description: 'An error object'
           schema:
@@ -250,7 +248,60 @@ paths:
           description: "A Sauce object"
           schema:
             $ref: '#/components/schemas/SauceGet'
-
+        404:
+          description: 'An error object'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Cette sauce n'exsite pas."
+        500:
+          description: 'Unexpected error'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error message"
+  # Like a sauce
+  /api/sauces/{id}/like:
+    post:
+      summary: "Like a specific Sauce"
+      description: "Like a Sauce by id"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          description: The sauce ID
+          in: path
+          required: true
+          type: integer
+          example: 60e6d87e80ef5f71eaa28a2a
+        - name: like
+          description: Like value (1 = like, 0 = cancel, -1 = dislike)
+          in: body
+          required: true
+          type: integer
+          example: 1
+      responses:
+        200:
+          description: "A message object"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "Votre like a été mis à jour."
+        400:
+          description: 'An error object'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error message"
         404:
           description: 'An error object'
           schema:
