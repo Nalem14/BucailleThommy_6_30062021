@@ -1,11 +1,13 @@
 ### Main config ###
-#swagger: "2.0"
 openapi: '3.0.3'
 info:
   title: "SoPekocko API"
   description: "List of all routes availables for the API"
   version: "1.0"
 produces: ["application/json"]
+servers:
+  - url: "http://127.0.0.1:3000"
+    description: "Local server test API"
 
 ### Components ###
 components:
@@ -106,14 +108,12 @@ paths:
       summary: "Create a user"
       description: "Create a new user and return a message"
       tags: ["Users"]
-      consumes:
-        - application/json
-      parameters:
-        - in: body
-          name: 
-          description: "The user to create"
-          schema:
-            $ref: '#/components/schemas/User'
+      requestBody:
+        description: "The user to create"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
 
       responses:
         201:
@@ -141,12 +141,12 @@ paths:
       summary: "Login a user"
       description: "Return User object with userId and auth token"
       tags: ["Users"]
-      parameters:
-        - in: body
-          name: 
-          description: "The user to login"
-          schema:
-            $ref: '#/components/schemas/User'
+      requestBody:
+        description: "The user to login"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
       responses:
         200:
           description: 'An object with user ID and auth token'
@@ -201,12 +201,12 @@ paths:
       tags: ["Sauces"]
       security:
         - bearerAuth: []
-      parameters:
-        - in: body
-          name: sauce
-          description: "The Sauce object"
-          schema:
-            $ref: '#/components/schemas/SaucePost'
+      requestBody:
+        description: "The Sauce object"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaucePost'
       responses:
         201:
           description: "A message object"
@@ -274,12 +274,12 @@ paths:
       tags: ["Sauces"]
       security:
         - bearerAuth: []
-      parameters:
-        - in: body
-          name: sauce
-          description: "The Sauce object"
-          schema:
-            $ref: '#/components/schemas/SaucePost'
+      requestBody:
+        description: "The Sauce object"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaucePost'
       responses:
         201:
           description: "A message object"
@@ -356,6 +356,18 @@ paths:
       tags: ["Sauces"]
       security:
         - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                like:
+                  description: "Like value (1 = like, 0 = cancel, -1 = dislike)"
+                  type: integer
+                  example: 1
+                  minimum: -1
+                  maximum: 1
       parameters:
         - name: id
           description: The sauce ID
@@ -363,14 +375,6 @@ paths:
           required: true
           type: integer
           example: 60e6d87e80ef5f71eaa28a2a
-        - name: like
-          description: Like value (1 = like, 0 = cancel, -1 = dislike)
-          in: body
-          required: true
-          type: integer
-          example: 1
-          minimum: -1
-          maximum: 1
       responses:
         200:
           description: "A message object"
