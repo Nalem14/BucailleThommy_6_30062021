@@ -29,6 +29,12 @@ components:
   
     SaucePost:
       type: object
+      requestBody:
+        content:
+          image/*:
+            schema:
+              type: string
+              format: binary
       properties:
         userId:
           type: integer
@@ -45,9 +51,6 @@ components:
         mainPepper:
           type: string
           description: "The sauce main pepper"
-        imageUrl:
-          type: string
-          description: "The sauce image URL"
         heat:
           type: integer
           description: The sauce heat
@@ -257,6 +260,43 @@ paths:
               error:
                 type: string
                 example: "Cette sauce n'exsite pas."
+        500:
+          description: 'Unexpected error'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error message"
+    put:
+      summary: "Update Sauce"
+      description: "Update an existing sauce"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: body
+          name: sauce
+          description: "The Sauce object"
+          schema:
+            $ref: '#/components/schemas/SaucePost'
+      responses:
+        201:
+          description: "A message object"
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: "La sauce a bien été modifiée."
+        400:
+          description: 'An error object'
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Error message"
         500:
           description: 'Unexpected error'
           schema:
