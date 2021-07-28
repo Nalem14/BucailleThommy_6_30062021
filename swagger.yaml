@@ -124,20 +124,24 @@ paths:
       responses:
         201:
           description: 'A message object'
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: "Votre compte a bien été créé."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été créé."
         401:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
         500:
           description: "Unexpected error"
 
@@ -156,23 +160,27 @@ paths:
       responses:
         200:
           description: 'An object with user ID and auth token'
-          schema:
-            type: object
-            properties:
-              userId:
-                type: string
-                example: "324567UJYGBFDVSTDFYGJ"
-              token:
-                type: string
-                example: "EFRGHJKTR345678UYTHGFD"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: "324567UJYGBFDVSTDFYGJ"
+                  token:
+                    type: string
+                    example: "EFRGHJKTR345678UYTHGFD"
         401:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Les identifiants fournis ne correspondent pas."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Les identifiants fournis ne correspondent pas."
         500:
           description: "Unexpected error"
 
@@ -188,18 +196,22 @@ paths:
       responses:
         200:
           description: "Return an array with each sauces"
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/SauceGet'
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SauceGet'
         401:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Aucune sauce n'est disponible"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Aucune sauce n'est disponible"
     # Create
     post:
       summary: "Create Sauce"
@@ -225,28 +237,34 @@ paths:
       responses:
         201:
           description: "A message object"
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: "La sauce a bien été ajoutée."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "La sauce a bien été ajoutée."
         400:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
         500:
           description: 'Unexpected error'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
   # Get specific sauce
   /api/sauces/{id}:
     get:
@@ -265,24 +283,30 @@ paths:
       responses:
         200:
           description: "A Sauce object"
-          schema:
-            $ref: '#/components/schemas/SauceGet'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SauceGet'
         404:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Cette sauce n'exsite pas."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cette sauce n'exsite pas."
         500:
           description: 'Unexpected error'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
     put:
       summary: "Update Sauce"
       description: "Update an existing sauce"
@@ -309,28 +333,34 @@ paths:
       responses:
         201:
           description: "A message object"
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: "La sauce a bien été modifiée."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "La sauce a bien été modifiée."
         400:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
         500:
           description: 'Unexpected error'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
     delete:
       summary: "Delete a Sauce"
       description: "Delete an existing sauce"
@@ -344,36 +374,44 @@ paths:
       responses:
         200:
           description: "A message object"
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: "La sauce a bien été supprimée."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "La sauce a bien été supprimée."
         400:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
         404:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Cette sauce n'existe pas."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cette sauce n'existe pas."
         500:
           description: 'Unexpected error'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
   # Like a sauce
   /api/sauces/{id}/like:
     post:
@@ -403,33 +441,41 @@ paths:
       responses:
         200:
           description: "A message object"
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: "Votre like a été mis à jour."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre like a été mis à jour."
         400:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
         404:
           description: 'An error object'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Cette sauce n'exsite pas."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cette sauce n'exsite pas."
         500:
           description: 'Unexpected error'
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                example: "Error message"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
