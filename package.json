@@ -30,7 +30,7 @@
     "hibp": "^11.0.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.13.0",
+    "mongoose": "^5.13.3",
     "string-sanitizer": "^2.0.2",
     "toobusy-js": "^0.5.1"
   }
