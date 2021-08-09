@@ -158,6 +158,38 @@ exports.exportDatas = (req, res) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
+// Alert a user
+exports.alert = async (req, res) => {
+  let userId = req.body.userId;
+  // Get current user in session
+  let currentUser = await User.findOne({ _id: req.userId});
+
+  // If current user not found, return an error
+  if(!currentUser) {
+    return res
+          .status(401)
+          .json({ error: "Utilisateur introuvable." });
+  }
+
+  // User to alert
+  User.findOne({ _id: userId})
+    .then(user => {
+      // If user to alert not found, return an error
+      if (!user) {
+        return res
+          .status(401)
+          .json({ error: "Utilisateur introuvable." });
+      }
+
+      if(user.usersAlert.indexOf(currentUser._id) === -1) {
+        user.usersAlert.push(currentUser._id);
+      }
+
+      return res.status(200).json({ message: "L'utilisateur a bien été signalé." });
+
+    }).catch(error => res.status(500).json({ error }));
+};
+
 // Delete a User with the specified id in the request
 exports.delete = (req, res) => {
   User.findOneAndDelete(req.userId).then(result => {

@@ -7,6 +7,7 @@ router.post("/signup", userController.signup);
 router.post("/login", userController.login);
 router.get("/get-datas", authMiddleware, userController.getDatas);
 router.get("/export-datas", authMiddleware, userController.exportDatas);
+router.post("/alert", authMiddleware, userController.alert);
 router.delete("/delete", authMiddleware, userController.delete);
 
 module.exports = router;
