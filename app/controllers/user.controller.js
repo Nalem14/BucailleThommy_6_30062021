@@ -191,7 +191,73 @@ exports.alert = async (req, res) => {
     }).catch(error => res.status(500).json({ error }));
 };
 
-// Delete a User with the specified id in the request
+// Update user account
+exports.update = async (req, res) => {
+  // Find user in the current session
+  let user = await User.findOne({ _id: req.userId });
+  // If user not found, return an error
+  if(!user) {
+    return res
+          .status(401)
+          .json({ error: "Utilisateur introuvable." });
+  }
+
+  /**
+   * If user change password
+   **/
+  if("password" in req.body) {
+    // Check password strength
+    if(passwordStrength(req.body.password).value != "Medium" && passwordStrength(req.body.password).value != "Strong") {
+      return res.status(400).json({ error: "Le mot de passe indiqué n'est pas suffisamment sécurisé." })
+    }
+
+    // Check pwned password
+    let nbPwned = await pwnedPassword(req.body.password);
+    if(nbPwned > 0) {
+      return res.status(400).json({ error: "Ce mot de passe n'est pas sécurisé." });
+    }
+
+    // Encrypt the password send in request and save in the User object
+    const hash = await bcrypt.hash(req.body.password, 10)
+    user.password = hash;
+  }
+
+  /**
+   * If user change email
+   **/
+  if("email" in req.body) {
+    // Check email validation
+    if(!validateEmail(req.body.email)) {
+      return res.status(400).json({ error: "L'email indiqué est invalide." })
+    }
+
+    // Save the email in the User object
+    user.email = req.body.email;
+  }
+
+  // Save the user and return a response
+  user
+  .save()
+  .then(() => {
+    res.status(201).json({ message: "Votre compte a bien été modifié." }, [
+      {
+        rel: "create",
+        method: "POST",
+        title: "Create User",
+        href: baseUri + "/api/auth/signup",
+      },
+      {
+        rel: "login",
+        method: "POST",
+        title: "Login User",
+        href: baseUri + "/api/auth/login",
+      },
+    ]);
+  })
+  .catch((error) => res.status(400).json({ error }));
+};
+
+// Delete User account
 exports.delete = (req, res) => {
   User.findOneAndDelete(req.userId).then(result => {
     if (!result) {

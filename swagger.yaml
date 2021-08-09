@@ -304,6 +304,53 @@ paths:
                     example: "Error message"
         500:
           description: "Unexpected error"
+  ### Update user account ###
+  /api/auth/update:
+    put:
+      summary: "Update user account"
+      description: "Update a user account"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user email"
+                  example: "email@domain.tld"
+                  optionnal: true
+                password:
+                  type: string
+                  description: "The user password"
+                  example: "123456"
+                  optionnal: true
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été modifié."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
   ### Delete user account ###
   /api/auth/delete:
     delete:
