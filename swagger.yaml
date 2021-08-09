@@ -263,6 +263,37 @@ paths:
                     example: "Error message"
         500:
           description: "Unexpected error"
+  ### Delete user account ###
+  /api/auth/delete:
+    post:
+      summary: "Delete logged-in user"
+      description: "Delete a user account"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été supprimé."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
 
   ### SAUCES ###
   /api/sauces:

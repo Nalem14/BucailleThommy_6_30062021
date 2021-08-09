@@ -159,10 +159,12 @@ exports.exportDatas = (req, res) => {
 };
 
 // Delete a User with the specified id in the request
-// exports.delete = (req, res) => {
-//   User.findOneAndDelete(req.body.userId).then(result => {
-//     if (!result) {
-//         return res.status(401).json({ error: 'Votre compte utilisateur n\'as pas pu être trouvé.' });
-//     }
-//   }).catch(error => res.status(500).json({ error }));
-// };
+exports.delete = (req, res) => {
+  User.findOneAndDelete(req.userId).then(result => {
+    if (!result) {
+        return res.status(401).json({ error: 'Votre compte utilisateur n\'as pas pu être trouvé.' });
+    }
+
+    return res.status(200).json({ message: "Votre compte utilisateur a bien été supprimé."});
+  }).catch(error => res.status(500).json({ error }));
+};
