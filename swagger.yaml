@@ -183,6 +183,38 @@ paths:
                     example: "Les identifiants fournis ne correspondent pas."
         500:
           description: "Unexpected error"
+  
+  ### Get user datas in JSON ###
+  /api/auth/get-datas:
+    get:
+      summary: "Get user datas in JSON"
+      description: "Return an object containing user datas"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        201:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été créé."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
 
   ### SAUCES ###
   /api/sauces:

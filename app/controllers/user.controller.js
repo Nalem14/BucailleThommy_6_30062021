@@ -125,6 +125,22 @@ exports.login = (req, res) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
+exports.getDatas = (req, res) => {
+  console.log(req.userId);
+  User.findOne({ _id: req.userId})
+    .then(user => {
+      // If user not found, return an error
+      if (!user) {
+        return res
+          .status(401)
+          .json({ error: "Utilisateur introuvable." });
+      }
+
+      return res.status(200).json(user);
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+
 // Delete a User with the specified id in the request
 // exports.delete = (req, res) => {
 //   User.findOneAndDelete(req.body.userId).then(result => {
