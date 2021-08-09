@@ -183,6 +183,7 @@ exports.alert = async (req, res) => {
 
       if(user.usersAlert.indexOf(currentUser._id) === -1) {
         user.usersAlert.push(currentUser._id);
+        user.save();
       }
 
       return res.status(200).json({ message: "L'utilisateur a bien été signalé." });
