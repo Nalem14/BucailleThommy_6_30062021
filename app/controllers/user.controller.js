@@ -126,7 +126,6 @@ exports.login = (req, res) => {
 };
 
 exports.getDatas = (req, res) => {
-  console.log(req.userId);
   User.findOne({ _id: req.userId})
     .then(user => {
       // If user not found, return an error
@@ -137,6 +136,24 @@ exports.getDatas = (req, res) => {
       }
 
       return res.status(200).json(user);
+    })
+    .catch((error) => res.status(500).json({ error }));
+};
+
+exports.exportDatas = (req, res) => {
+  User.findOne({ _id: req.userId})
+    .then(user => {
+      // If user not found, return an error
+      if (!user) {
+        return res
+          .status(401)
+          .json({ error: "Utilisateur introuvable." });
+      }
+
+      var text = user.toString();
+      res.attachment('user-datas.txt')
+      res.type('txt')
+      return res.status(200).send(text)
     })
     .catch((error) => res.status(500).json({ error }));
 };

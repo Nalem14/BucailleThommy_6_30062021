@@ -31,6 +31,29 @@ components:
           type: string
           description: The user password.
           example: "1234"
+    UserExport:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The user ID
+          example: "60e2c6f4cf21ba52757cd5e8"
+        email:
+          type: string
+          description: The user email.
+          example: "john.doe@mail.tld"
+        password:
+          type: string
+          description: The user password.
+          example: "1234"
+        createdAt:
+          type: datetime
+          description: The user creation date/time
+          example: "2021-07-05T08:46:44.400Z"
+        updatedAt:
+          type: datetime
+          description: The last user update date/time
+          example: "2021-07-05T08:46:44.400Z"
   
     SaucePost:
       type: object
@@ -193,16 +216,41 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        201:
-          description: 'A message object'
+        200:
+          description: 'A User object'
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/UserExport'
+        401:
+          description: 'An error object'
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  message:
+                  error:
                     type: string
-                    example: "Votre compte a bien été créé."
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Export user datas in TXT ###
+  /api/auth/export-datas:
+    get:
+      summary: "Export user datas in TXT"
+      description: "Return text containing user datas"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'User datas in text format'
+          content:
+            application/text:
+              schema:
+                type: text
+                $ref: '#/components/schemas/UserExport'
         401:
           description: 'An error object'
           content:
