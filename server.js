@@ -7,6 +7,9 @@ const routes = require("./app/routes");
 const tooBusyMiddleware = require("./app/middleware/tooBusy.middleware");
 const hpp = require('hpp');
 const app = express();
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
 
 require('dotenv').config();
 
@@ -56,6 +59,9 @@ app.use(express.static(__dirname + "/public"));
 
 // Define routes
 app.use(routes);
+
+// Swagger Doc
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 // Connect databse
