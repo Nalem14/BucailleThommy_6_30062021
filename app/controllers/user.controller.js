@@ -61,6 +61,36 @@ exports.signup = async (req, res) => {
               title: "Login User",
               href: baseUri + "/api/auth/login",
             },
+            {
+              rel: "getDatas",
+              method: "GET",
+              title: "Get User datas",
+              href: baseUri + "/api/auth/get-datas",
+            },
+            {
+              rel: "exportDatas",
+              method: "GET",
+              title: "Export User datas",
+              href: baseUri + "/api/auth/export-datas",
+            },
+            {
+              rel: "alert",
+              method: "POST",
+              title: "Alert a User",
+              href: baseUri + "/api/auth/alert",
+            },
+            {
+              rel: "update",
+              method: "PUT",
+              title: "Update User",
+              href: baseUri + "/api/auth/update",
+            },
+            {
+              rel: "delete",
+              method: "DELETE",
+              title: "Delete User",
+              href: baseUri + "/api/auth/delete",
+            }
           ]);
         })
         .catch((error) => res.status(400).json({ error }));
@@ -117,6 +147,36 @@ exports.login = (req, res) => {
                 title: "Login User",
                 href: baseUri + "/api/auth/login",
               },
+              {
+                rel: "getDatas",
+                method: "GET",
+                title: "Get User datas",
+                href: baseUri + "/api/auth/get-datas",
+              },
+              {
+                rel: "exportDatas",
+                method: "GET",
+                title: "Export User datas",
+                href: baseUri + "/api/auth/export-datas",
+              },
+              {
+                rel: "alert",
+                method: "POST",
+                title: "Alert a User",
+                href: baseUri + "/api/auth/alert",
+              },
+              {
+                rel: "update",
+                method: "PUT",
+                title: "Update User",
+                href: baseUri + "/api/auth/update",
+              },
+              {
+                rel: "delete",
+                method: "DELETE",
+                title: "Delete User",
+                href: baseUri + "/api/auth/delete",
+              }
             ]
           );
         })
@@ -135,7 +195,51 @@ exports.getDatas = (req, res) => {
           .json({ error: "Utilisateur introuvable." });
       }
 
-      return res.status(200).json(user);
+      return res.status(200).json(user,
+        [
+          {
+            rel: "create",
+            method: "POST",
+            title: "Create User",
+            href: baseUri + "/api/auth/signup",
+          },
+          {
+            rel: "login",
+            method: "POST",
+            title: "Login User",
+            href: baseUri + "/api/auth/login",
+          },
+          {
+            rel: "getDatas",
+            method: "GET",
+            title: "Get User datas",
+            href: baseUri + "/api/auth/get-datas",
+          },
+          {
+            rel: "exportDatas",
+            method: "GET",
+            title: "Export User datas",
+            href: baseUri + "/api/auth/export-datas",
+          },
+          {
+            rel: "alert",
+            method: "POST",
+            title: "Alert a User",
+            href: baseUri + "/api/auth/alert",
+          },
+          {
+            rel: "update",
+            method: "PUT",
+            title: "Update User",
+            href: baseUri + "/api/auth/update",
+          },
+          {
+            rel: "delete",
+            method: "DELETE",
+            title: "Delete User",
+            href: baseUri + "/api/auth/delete",
+          }
+        ]);
     })
     .catch((error) => res.status(500).json({ error }));
 };
@@ -153,7 +257,51 @@ exports.exportDatas = (req, res) => {
       var text = user.toString();
       res.attachment('user-datas.txt')
       res.type('txt')
-      return res.status(200).send(text)
+      return res.status(200).send(text,
+        [
+          {
+            rel: "create",
+            method: "POST",
+            title: "Create User",
+            href: baseUri + "/api/auth/signup",
+          },
+          {
+            rel: "login",
+            method: "POST",
+            title: "Login User",
+            href: baseUri + "/api/auth/login",
+          },
+          {
+            rel: "getDatas",
+            method: "GET",
+            title: "Get User datas",
+            href: baseUri + "/api/auth/get-datas",
+          },
+          {
+            rel: "exportDatas",
+            method: "GET",
+            title: "Export User datas",
+            href: baseUri + "/api/auth/export-datas",
+          },
+          {
+            rel: "alert",
+            method: "POST",
+            title: "Alert a User",
+            href: baseUri + "/api/auth/alert",
+          },
+          {
+            rel: "update",
+            method: "PUT",
+            title: "Update User",
+            href: baseUri + "/api/auth/update",
+          },
+          {
+            rel: "delete",
+            method: "DELETE",
+            title: "Delete User",
+            href: baseUri + "/api/auth/delete",
+          }
+        ])
     })
     .catch((error) => res.status(500).json({ error }));
 };
@@ -186,7 +334,51 @@ exports.alert = async (req, res) => {
         user.save();
       }
 
-      return res.status(200).json({ message: "L'utilisateur a bien été signalé." });
+      return res.status(200).json({ message: "L'utilisateur a bien été signalé." },
+      [
+        {
+          rel: "create",
+          method: "POST",
+          title: "Create User",
+          href: baseUri + "/api/auth/signup",
+        },
+        {
+          rel: "login",
+          method: "POST",
+          title: "Login User",
+          href: baseUri + "/api/auth/login",
+        },
+        {
+          rel: "getDatas",
+          method: "GET",
+          title: "Get User datas",
+          href: baseUri + "/api/auth/get-datas",
+        },
+        {
+          rel: "exportDatas",
+          method: "GET",
+          title: "Export User datas",
+          href: baseUri + "/api/auth/export-datas",
+        },
+        {
+          rel: "alert",
+          method: "POST",
+          title: "Alert a User",
+          href: baseUri + "/api/auth/alert",
+        },
+        {
+          rel: "update",
+          method: "PUT",
+          title: "Update User",
+          href: baseUri + "/api/auth/update",
+        },
+        {
+          rel: "delete",
+          method: "DELETE",
+          title: "Delete User",
+          href: baseUri + "/api/auth/delete",
+        }
+      ]);
 
     }).catch(error => res.status(500).json({ error }));
 };
@@ -239,7 +431,8 @@ exports.update = async (req, res) => {
   user
   .save()
   .then(() => {
-    res.status(201).json({ message: "Votre compte a bien été modifié." }, [
+    res.status(201).json({ message: "Votre compte a bien été modifié." },
+    [
       {
         rel: "create",
         method: "POST",
@@ -252,6 +445,36 @@ exports.update = async (req, res) => {
         title: "Login User",
         href: baseUri + "/api/auth/login",
       },
+      {
+        rel: "getDatas",
+        method: "GET",
+        title: "Get User datas",
+        href: baseUri + "/api/auth/get-datas",
+      },
+      {
+        rel: "exportDatas",
+        method: "GET",
+        title: "Export User datas",
+        href: baseUri + "/api/auth/export-datas",
+      },
+      {
+        rel: "alert",
+        method: "POST",
+        title: "Alert a User",
+        href: baseUri + "/api/auth/alert",
+      },
+      {
+        rel: "update",
+        method: "PUT",
+        title: "Update User",
+        href: baseUri + "/api/auth/update",
+      },
+      {
+        rel: "delete",
+        method: "DELETE",
+        title: "Delete User",
+        href: baseUri + "/api/auth/delete",
+      }
     ]);
   })
   .catch((error) => res.status(400).json({ error }));
@@ -264,6 +487,50 @@ exports.delete = (req, res) => {
         return res.status(401).json({ error: 'Votre compte utilisateur n\'as pas pu être trouvé.' });
     }
 
-    return res.status(200).json({ message: "Votre compte utilisateur a bien été supprimé."});
+    return res.status(200).json({ message: "Votre compte utilisateur a bien été supprimé."},
+    [
+      {
+        rel: "create",
+        method: "POST",
+        title: "Create User",
+        href: baseUri + "/api/auth/signup",
+      },
+      {
+        rel: "login",
+        method: "POST",
+        title: "Login User",
+        href: baseUri + "/api/auth/login",
+      },
+      {
+        rel: "getDatas",
+        method: "GET",
+        title: "Get User datas",
+        href: baseUri + "/api/auth/get-datas",
+      },
+      {
+        rel: "exportDatas",
+        method: "GET",
+        title: "Export User datas",
+        href: baseUri + "/api/auth/export-datas",
+      },
+      {
+        rel: "alert",
+        method: "POST",
+        title: "Alert a User",
+        href: baseUri + "/api/auth/alert",
+      },
+      {
+        rel: "update",
+        method: "PUT",
+        title: "Update User",
+        href: baseUri + "/api/auth/update",
+      },
+      {
+        rel: "delete",
+        method: "DELETE",
+        title: "Delete User",
+        href: baseUri + "/api/auth/delete",
+      }
+    ]);
   }).catch(error => res.status(500).json({ error }));
 };
