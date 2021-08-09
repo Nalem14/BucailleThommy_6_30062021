@@ -265,8 +265,8 @@ paths:
           description: "Unexpected error"
   ### Delete user account ###
   /api/auth/delete:
-    post:
-      summary: "Delete logged-in user"
+    delete:
+      summary: "Delete user account"
       description: "Delete a user account"
       tags: ["Users"]
       security:
