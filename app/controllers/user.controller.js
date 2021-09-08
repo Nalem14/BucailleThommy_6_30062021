@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const { passwordStrength } = require('check-password-strength');
 const bouncer = require('express-bouncer')(5000, 900000, 3);
 const { pwnedPassword } = require('hibp');
+var CryptoJS = require("crypto-js");
 
 // Validate email string
 function validateEmail(email) {
@@ -37,9 +38,12 @@ exports.signup = async (req, res) => {
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
+      // Encrypt email
+      var emailEncrypted = CryptoJS.AES.encrypt(req.body.email, process.env.PASSPHRASE).toString();
+
       // Define the User object with datas in request and the hashed password
       const user = new User({
-        email: req.body.email,
+        email: emailEncrypted,
         password: hash,
       });
 
@@ -102,8 +106,11 @@ exports.signup = async (req, res) => {
 exports.login = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 
+  // Encrypt email
+  var emailEncrypted = CryptoJS.AES.encrypt(req.body.email, process.env.PASSPHRASE).toString();
+
   // Find user with email send in request
-  User.findOne({ email: req.body.email })
+  User.findOne({ email: emailEncrypted })
     .then((user) => {
       // If user not found, return an error
       if (!user) {
@@ -195,6 +202,10 @@ exports.getDatas = (req, res) => {
           .json({ error: "Utilisateur introuvable." });
       }
 
+      // Decrypt email
+      var bytes  = CryptoJS.AES.decrypt(user.email, process.env.PASSPHRASE);
+      user.email = bytes.toString(CryptoJS.enc.Utf8);
+
       return res.status(200).json(user,
         [
           {
@@ -253,6 +264,10 @@ exports.exportDatas = (req, res) => {
           .status(401)
           .json({ error: "Utilisateur introuvable." });
       }
+
+      // Decrypt email
+      var bytes  = CryptoJS.AES.decrypt(user.email, process.env.PASSPHRASE);
+      user.email = bytes.toString(CryptoJS.enc.Utf8);
 
       var text = user.toString();
       res.attachment('user-datas.txt')
@@ -423,8 +438,12 @@ exports.update = async (req, res) => {
       return res.status(400).json({ error: "L'email indiqué est invalide." })
     }
 
+    // Encrypt email
+    var emailEncrypted = CryptoJS.AES.encrypt(req.body.email, process.env.PASSPHRASE).toString();
+
+
     // Save the email in the User object
-    user.email = req.body.email;
+    user.email = emailEncrypted;
   }
 
   // Save the user and return a response
