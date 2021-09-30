@@ -260,8 +260,6 @@ exports.getDatas = (req, res) => {
 };
 
 exports.exportDatas = (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
-
   User.findOne({ _id: req.userId})
     .then(user => {
       // If user not found, return an error
