@@ -31,6 +31,29 @@ components:
           type: string
           description: The user password.
           example: "1234"
+    UserExport:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The user ID
+          example: "60e2c6f4cf21ba52757cd5e8"
+        email:
+          type: string
+          description: The user email.
+          example: "john.doe@mail.tld"
+        password:
+          type: string
+          description: The user password.
+          example: "1234"
+        createdAt:
+          type: datetime
+          description: The user creation date/time
+          example: "2021-07-05T08:46:44.400Z"
+        updatedAt:
+          type: datetime
+          description: The last user update date/time
+          example: "2021-07-05T08:46:44.400Z"
   
     SaucePost:
       type: object
@@ -181,6 +204,182 @@ paths:
                   error:
                     type: string
                     example: "Les identifiants fournis ne correspondent pas."
+        500:
+          description: "Unexpected error"
+  
+  ### Get user datas in JSON ###
+  /api/auth/get-datas:
+    get:
+      summary: "Get user datas in JSON"
+      description: "Return an object containing user datas"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'A User object'
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/UserExport'
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Export user datas in TXT ###
+  /api/auth/export-datas:
+    get:
+      summary: "Export user datas in TXT"
+      description: "Return text containing user datas"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'User datas in text format'
+          content:
+            application/text:
+              schema:
+                type: text
+                $ref: '#/components/schemas/UserExport'
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Alert a user account ###
+  /api/auth/alert:
+    post:
+      summary: "Alert a user account"
+      description: "Alert a user account"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: "The user ID to alert"
+                  example: "60e2c6f4cf21ba52757cd5e8"
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "L'utilisateur a bien été signalé."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Update user account ###
+  /api/auth/update:
+    put:
+      summary: "Update user account"
+      description: "Update a user account"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user email"
+                  example: "email@domain.tld"
+                  optionnal: true
+                password:
+                  type: string
+                  description: "The user password"
+                  example: "123456"
+                  optionnal: true
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été modifié."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Delete user account ###
+  /api/auth/delete:
+    delete:
+      summary: "Delete user account"
+      description: "Delete a user account"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été supprimé."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
         500:
           description: "Unexpected error"
 
