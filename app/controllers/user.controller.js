@@ -39,7 +39,7 @@ exports.signup = async (req, res) => {
     .hash(req.body.password, 10)
     .then((hash) => {
       // Encrypt email
-      var emailEncrypted = CryptoJS.AES.encrypt(req.body.email, process.env.PASSPHRASE).toString();
+      var emailEncrypted = encryptEmail(req.body.email);
 
       // Define the User object with datas in request and the hashed password
       const user = new User({
@@ -107,7 +107,7 @@ exports.login = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 
   // Encrypt email
-  var emailEncrypted = CryptoJS.AES.encrypt(req.body.email, process.env.PASSPHRASE).toString();
+  var emailEncrypted = encryptEmail(req.body.email);
 
   // Find user with email send in request
   User.findOne({ email: emailEncrypted })
@@ -193,6 +193,8 @@ exports.login = (req, res) => {
 };
 
 exports.getDatas = (req, res) => {
+  const baseUri = req.protocol + "://" + req.get("host");
+
   User.findOne({ _id: req.userId})
     .then(user => {
       // If user not found, return an error
@@ -203,8 +205,7 @@ exports.getDatas = (req, res) => {
       }
 
       // Decrypt email
-      var bytes  = CryptoJS.AES.decrypt(user.email, process.env.PASSPHRASE);
-      user.email = bytes.toString(CryptoJS.enc.Utf8);
+      user.email = decryptEmail(user.email);
 
       return res.status(200).json(user,
         [
@@ -252,10 +253,15 @@ exports.getDatas = (req, res) => {
           }
         ]);
     })
-    .catch((error) => res.status(500).json({ error }));
+    .catch((error) => {
+      console.error(error);
+      res.status(500).json({ error })
+    });
 };
 
 exports.exportDatas = (req, res) => {
+  const baseUri = req.protocol + "://" + req.get("host");
+
   User.findOne({ _id: req.userId})
     .then(user => {
       // If user not found, return an error
@@ -266,8 +272,7 @@ exports.exportDatas = (req, res) => {
       }
 
       // Decrypt email
-      var bytes  = CryptoJS.AES.decrypt(user.email, process.env.PASSPHRASE);
-      user.email = bytes.toString(CryptoJS.enc.Utf8);
+      user.email = decryptEmail(user.email);
 
       var text = user.toString();
       res.attachment('user-datas.txt')
@@ -323,6 +328,8 @@ exports.exportDatas = (req, res) => {
 
 // Alert a user
 exports.alert = async (req, res) => {
+  const baseUri = req.protocol + "://" + req.get("host");
+
   let userId = req.body.userId;
   // Get current user in session
   let currentUser = await User.findOne({ _id: req.userId});
@@ -400,6 +407,8 @@ exports.alert = async (req, res) => {
 
 // Update user account
 exports.update = async (req, res) => {
+  const baseUri = req.protocol + "://" + req.get("host");
+
   // Find user in the current session
   let user = await User.findOne({ _id: req.userId });
   // If user not found, return an error
@@ -439,7 +448,7 @@ exports.update = async (req, res) => {
     }
 
     // Encrypt email
-    var emailEncrypted = CryptoJS.AES.encrypt(req.body.email, process.env.PASSPHRASE).toString();
+    var emailEncrypted = encryptEmail(req.body.email);
 
 
     // Save the email in the User object
@@ -501,6 +510,8 @@ exports.update = async (req, res) => {
 
 // Delete User account
 exports.delete = (req, res) => {
+  const baseUri = req.protocol + "://" + req.get("host");
+  
   User.findOneAndDelete(req.userId).then(result => {
     if (!result) {
         return res.status(401).json({ error: 'Votre compte utilisateur n\'as pas pu être trouvé.' });
@@ -553,3 +564,12 @@ exports.delete = (req, res) => {
     ]);
   }).catch(error => res.status(500).json({ error }));
 };
+
+function encryptEmail(email) {
+  return CryptoJS.AES.encrypt(email, CryptoJS.enc.Base64.parse(process.env.PASSPHRASE), { iv: CryptoJS.enc.Base64.parse(process.env.IV), mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 }).toString();
+}
+
+function decryptEmail(email) {
+  var bytes  = CryptoJS.AES.decrypt(email, CryptoJS.enc.Base64.parse(process.env.PASSPHRASE), { iv: CryptoJS.enc.Base64.parse(process.env.IV), mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
+  return bytes.toString(CryptoJS.enc.Utf8);
+}
