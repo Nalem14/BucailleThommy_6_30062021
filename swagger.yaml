@@ -1,0 +1,680 @@
+### Main config ###
+openapi: '3.0.3'
+info:
+  title: "SoPekocko API"
+  description: "List of all routes availables for the API"
+  version: "1.0"
+produces: ["application/json"]
+servers:
+  - url: "http://127.0.0.1:3000"
+    description: "Local server test API"
+
+### Components ###
+components:
+  securitySchemes:
+    bearerAuth:           # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT    # optional, arbitrary value for documentation purposes
+  schemas:
+    User:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          description: The user email.
+          example: "john.doe@mail.tld"
+        password:
+          type: string
+          description: The user password.
+          example: "1234"
+    UserExport:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: The user ID
+          example: "60e2c6f4cf21ba52757cd5e8"
+        email:
+          type: string
+          description: The user email.
+          example: "john.doe@mail.tld"
+        password:
+          type: string
+          description: The user password.
+          example: "1234"
+        createdAt:
+          type: datetime
+          description: The user creation date/time
+          example: "2021-07-05T08:46:44.400Z"
+        updatedAt:
+          type: datetime
+          description: The last user update date/time
+          example: "2021-07-05T08:46:44.400Z"
+  
+    SaucePost:
+      type: object
+      required:
+        - userId
+        - name
+        - manufacturer
+        - description
+        - mainPepper
+        - heat
+      properties:
+        userId:
+          type: integer
+          description: "The owner user id"
+        name:
+          type: string
+          description: "The sauce name"
+        manufacturer:
+          type: string
+          description: "The sauce manufacturer"
+        description:
+          type: string
+          description: "The sauce description"
+        mainPepper:
+          type: string
+          description: "The sauce main pepper"
+        heat:
+          type: integer
+          description: The sauce heat
+          minimum: 1
+          maximum: 10
+    SauceGet:
+      type: object
+      properties:
+        userId:
+          type: integer
+          description: "The owner user id"
+        name:
+          type: string
+          description: "The sauce name"
+        manufacturer:
+          type: string
+          description: "The sauce manufacturer"
+        description:
+          type: string
+          description: "The sauce description"
+        mainPepper:
+          type: string
+          description: "The sauce main pepper"
+        imageUrl:
+          type: string
+          description: "The sauce image URL"
+        heat:
+          type: integer
+          description: The sauce heat
+        likes:
+          type: integer
+          description: The number of likes
+        dislikes:
+          type: integer
+          description: The number of dislikes
+        usersLiked:
+          type: array
+          description: Array of users liked
+          items:
+            type: string
+            description: User ID
+        usersDisliked:
+          type: array
+          description: Array of users disliked
+          items:
+            type: string
+            description: User ID
+      
+
+paths:
+  ### USERS ###
+  # Signup
+  /api/auth/signup:
+    post:
+      summary: "Create a user"
+      description: "Create a new user and return a message"
+      tags: ["Users"]
+      requestBody:
+        description: "The user to create"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+
+      responses:
+        201:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été créé."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+
+  # Login
+  /api/auth/login:
+    post:
+      summary: "Login a user"
+      description: "Return User object with userId and auth token"
+      tags: ["Users"]
+      requestBody:
+        description: "The user to login"
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        200:
+          description: 'An object with user ID and auth token'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                    example: "324567UJYGBFDVSTDFYGJ"
+                  token:
+                    type: string
+                    example: "EFRGHJKTR345678UYTHGFD"
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Les identifiants fournis ne correspondent pas."
+        500:
+          description: "Unexpected error"
+  
+  ### Get user datas in JSON ###
+  /api/auth/get-datas:
+    get:
+      summary: "Get user datas in JSON"
+      description: "Return an object containing user datas"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'A User object'
+          content:
+            application/json:
+              schema:
+                type: object
+                $ref: '#/components/schemas/UserExport'
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Export user datas in TXT ###
+  /api/auth/export-datas:
+    get:
+      summary: "Export user datas in TXT"
+      description: "Return text containing user datas"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'User datas in text format'
+          content:
+            application/text:
+              schema:
+                type: text
+                $ref: '#/components/schemas/UserExport'
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Alert a user account ###
+  /api/auth/alert:
+    post:
+      summary: "Alert a user account"
+      description: "Alert a user account"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                  description: "The user ID to alert"
+                  example: "60e2c6f4cf21ba52757cd5e8"
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "L'utilisateur a bien été signalé."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Update user account ###
+  /api/auth/update:
+    put:
+      summary: "Update user account"
+      description: "Update a user account"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: "The user email"
+                  example: "email@domain.tld"
+                  optionnal: true
+                password:
+                  type: string
+                  description: "The user password"
+                  example: "123456"
+                  optionnal: true
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été modifié."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+  ### Delete user account ###
+  /api/auth/delete:
+    delete:
+      summary: "Delete user account"
+      description: "Delete a user account"
+      tags: ["Users"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre compte a bien été supprimé."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: "Unexpected error"
+
+  ### SAUCES ###
+  /api/sauces:
+    # List
+    get:
+      summary: "List all Sauces"
+      description: "Return an array of all Sauces object"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: "Return an array with each sauces"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SauceGet'
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Aucune sauce n'est disponible"
+    # Create
+    post:
+      summary: "Create Sauce"
+      description: "Create a new sauce"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: "The Sauce object"
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                sauce:
+                  description: "The Sauce object"
+                  type: object
+                  $ref: '#/components/schemas/SaucePost'
+                image:
+                  type: string
+                  format: binary
+                  description: The image file
+      responses:
+        201:
+          description: "A message object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "La sauce a bien été ajoutée."
+        400:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+  # Get specific sauce
+  /api/sauces/{id}:
+    get:
+      summary: "Get specific Sauce"
+      description: "Get a Sauce by id"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          description: The sauce ID
+          in: path
+          required: true
+          type: integer
+          example: 60e6d87e80ef5f71eaa28a2a
+      responses:
+        200:
+          description: "A Sauce object"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SauceGet'
+        404:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cette sauce n'exsite pas."
+        500:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+    put:
+      summary: "Update Sauce"
+      description: "Update an existing sauce"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              $ref: '#/components/schemas/SaucePost'
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                sauce:
+                  description: "The Sauce object"
+                  $ref: '#/components/schemas/SaucePost'
+                image:
+                  type: string
+                  format: binary
+                  description: The image file
+      responses:
+        201:
+          description: "A message object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "La sauce a bien été modifiée."
+        400:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        500:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+    delete:
+      summary: "Delete a Sauce"
+      description: "Delete an existing sauce"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          description: "The Sauce id"
+      responses:
+        200:
+          description: "A message object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "La sauce a bien été supprimée."
+        400:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        404:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cette sauce n'existe pas."
+        500:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+  # Like a sauce
+  /api/sauces/{id}/like:
+    post:
+      summary: "Like a specific Sauce"
+      description: "Like a Sauce by id"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                like:
+                  description: "Like value (1 = like, 0 = cancel, -1 = dislike)"
+                  type: integer
+                  example: 1
+                  minimum: -1
+                  maximum: 1
+      parameters:
+        - name: id
+          description: The sauce ID
+          in: path
+          required: true
+          type: integer
+          example: 60e6d87e80ef5f71eaa28a2a
+      responses:
+        200:
+          description: "A message object"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Votre like a été mis à jour."
+        400:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"
+        404:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Cette sauce n'exsite pas."
+        500:
+          description: 'Unexpected error'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Error message"

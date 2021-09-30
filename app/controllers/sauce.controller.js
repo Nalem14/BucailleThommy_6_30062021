@@ -205,7 +205,7 @@ exports.like = (req, res) => {
 // Add sauce
 exports.add = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
-  console.log(req.body);
+
   try {
     let sauceData = JSON.parse(req.body.sauce);
 
@@ -398,7 +398,7 @@ exports.delete = (req, res) => {
         return res.status(400).json({ error: err });
       }
 
-      res.status(200).json({ message: "La sauce a bien été supprimé." }, [
+      res.status(200).json({ message: "La sauce a bien été supprimée." }, [
         { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
         {
           rel: "create",
