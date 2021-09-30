@@ -7,11 +7,7 @@ module.exports = (req, res, next) => {
     const userId = decodedToken.userId;
     req.userId = userId;
     
-    if (req.body.userId && req.body.userId !== userId) {
-      throw 'Invalid user ID';
-    } else {
-      next();
-    }
+    next();
   } catch {
     res.status(401).json({
       error: 'Vous n\'êtes pas connecté. Merci de vous authentifier.'
