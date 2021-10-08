@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 const Sauce = require("../models/sauce.model")(mongoose);
-const fs = require('fs')
+const fs = require("fs");
 
 // List sauces
 exports.readAll = (req, res) => {
@@ -144,14 +144,16 @@ exports.like = (req, res) => {
       // Dislike or cancel like
       if (like == 0 || like == -1) {
         sauce.usersLiked.splice(index, 1);
-        if (like == 0) sauce.likes -= 1;
+        sauce.likes -= 1;
       }
     }
 
     // Like
     if (like == 1) {
-      if (index === -1) sauce.usersLiked.push(userId);
-      sauce.likes += 1;
+      if (index === -1) {
+        sauce.usersLiked.push(userId);
+        sauce.likes += 1;
+      }
     }
 
     /**
@@ -164,14 +166,16 @@ exports.like = (req, res) => {
       // Like or cancel dislike
       if (like == 0 || like == 1) {
         sauce.usersDisliked.splice(index, 1);
-        if (like == 0) sauce.dislikes -= 1;
+        sauce.dislikes -= 1;
       }
     }
 
     // Dislike
     if (like == -1) {
-      if (index === -1) sauce.usersDisliked.push(userId);
-      sauce.dislikes += 1;
+      if (index === -1) {
+        sauce.usersDisliked.push(userId);
+        sauce.dislikes += 1;
+      }
     }
 
     // Save the sauce and return response messsage
@@ -336,7 +340,7 @@ exports.update = async (req, res) => {
       // Delete the old image
       try {
         fs.unlinkSync("./public/images/" + sauce.imageUrl);
-      }catch(er) {
+      } catch (er) {
         console.log(er);
       }
 
@@ -419,7 +423,7 @@ exports.delete = (req, res) => {
     // Delete the image file
     try {
       fs.unlinkSync("./public/images/" + sauce.imageUrl);
-    }catch(er) {
+    } catch (er) {
       console.log(er);
     }
 
@@ -477,26 +481,22 @@ exports.report = async (req, res) => {
 
   // Sauce to re^prt
   Sauce.findById(req.params.id)
-    .then(sauce => {
+    .then((sauce) => {
       // If sauce to report not found, return an error
       if (!sauce) {
-        return res
-          .status(401)
-          .json({ error: "Sauce introuvable." });
+        return res.status(401).json({ error: "Sauce introuvable." });
       }
 
-      if(sauce.usersAlert.indexOf(userId) === -1) {
+      if (sauce.usersAlert.indexOf(userId) === -1) {
         sauce.usersAlert.push(userId);
         try {
-        sauce.save();
-        }
-        catch (err) {
-          console.log(err)
+          sauce.save();
+        } catch (err) {
+          console.log(err);
         }
       }
 
-      return res.status(200).json({ message: "La sauce a bien été signalé." },
-      [
+      return res.status(200).json({ message: "La sauce a bien été signalé." }, [
         { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
         {
           rel: "create",
@@ -534,6 +534,6 @@ exports.report = async (req, res) => {
           href: baseUri + "/api/sauces/" + sauce._id + "/report",
         },
       ]);
-
-    }).catch(error => res.status(500).json({ error }));
+    })
+    .catch((error) => res.status(500).json({ error }));
 };
