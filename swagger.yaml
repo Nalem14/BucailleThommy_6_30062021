@@ -387,7 +387,7 @@ paths:
   /api/sauces:
     # List
     get:
-      summary: "List all Sauces"
+      summary: "Read all Sauces"
       description: "Return an array of all Sauces object"
       tags: ["Sauces"]
       security:
@@ -477,8 +477,8 @@ paths:
   # Get specific sauce
   /api/sauces/{id}:
     get:
-      summary: "Get specific Sauce"
-      description: "Get a Sauce by id"
+      summary: "Read one specific Sauce"
+      description: "Read a Sauce by id"
       tags: ["Sauces"]
       security:
         - bearerAuth: []
@@ -639,16 +639,6 @@ paths:
       tags: ["Sauces"]
       security:
         - bearerAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: string
-                  description: "The sauce ID to report"
-                  example: "60e2c6f4cf21ba52757cd5e8"
       responses:
         200:
           description: 'A message object'
