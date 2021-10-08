@@ -3,3 +3,4 @@ node_modules/
 .pass
 public/images/*
 .env
+logs/

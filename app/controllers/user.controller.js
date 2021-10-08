@@ -192,7 +192,7 @@ exports.login = (req, res) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-exports.getDatas = (req, res) => {
+exports.readDatas = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 
   User.findOne({ _id: req.userId})
@@ -280,8 +280,8 @@ exports.exportDatas = (req, res) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-// Alert a user
-exports.alert = async (req, res) => {
+// Report a user
+exports.report = async (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 
   let userId = req.body.userId;

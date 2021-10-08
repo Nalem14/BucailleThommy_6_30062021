@@ -4,7 +4,7 @@ const Sauce = require("../models/sauce.model")(mongoose);
 const fs = require('fs')
 
 // List sauces
-exports.list = (req, res) => {
+exports.readAll = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 
   // Get all sauces in DB
@@ -51,6 +51,12 @@ exports.list = (req, res) => {
           title: "Like or Dislike Sauce",
           href: baseUri + "/api/sauces/" + sauce._id + "/like",
         },
+        {
+          rel: "report",
+          method: "POST",
+          title: "Report a Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id + "/report",
+        },
       ];
     }
 
@@ -60,7 +66,7 @@ exports.list = (req, res) => {
 };
 
 // Get specific sauce
-exports.get = (req, res) => {
+exports.readOne = (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 
   // Search for a Sauce with specific ID
@@ -104,6 +110,12 @@ exports.get = (req, res) => {
         method: "POST",
         title: "Like or Dislike Sauce",
         href: baseUri + "/api/sauces/" + sauce._id + "/like",
+      },
+      {
+        rel: "report",
+        method: "POST",
+        title: "Report a Sauce",
+        href: baseUri + "/api/sauces/" + sauce._id + "/report",
       },
     ]);
   });
@@ -196,6 +208,12 @@ exports.like = (req, res) => {
             title: "Like or Dislike Sauce",
             href: baseUri + "/api/sauces/" + sauce._id + "/like",
           },
+          {
+            rel: "report",
+            method: "POST",
+            title: "Report a Sauce",
+            href: baseUri + "/api/sauces/" + sauce._id + "/report",
+          },
         ])
       )
       .catch((error) => res.status(400).json({ error }));
@@ -275,6 +293,12 @@ exports.add = (req, res) => {
                 method: "POST",
                 title: "Like or Dislike Sauce",
                 href: baseUri + "/api/sauces/" + sauce._id + "/like",
+              },
+              {
+                rel: "report",
+                method: "POST",
+                title: "Report a Sauce",
+                href: baseUri + "/api/sauces/" + sauce._id + "/report",
               },
             ])
           )
@@ -367,6 +391,12 @@ exports.update = async (req, res) => {
             title: "Like or Dislike Sauce",
             href: baseUri + "/api/sauces/" + sauce._id + "/like",
           },
+          {
+            rel: "report",
+            method: "POST",
+            title: "Report a Sauce",
+            href: baseUri + "/api/sauces/" + sauce._id + "/report",
+          },
         ])
       )
       .catch((error) => res.status(400).json({ error }));
@@ -429,7 +459,81 @@ exports.delete = (req, res) => {
           title: "Like or Dislike Sauce",
           href: baseUri + "/api/sauces/" + sauce._id + "/like",
         },
+        {
+          rel: "report",
+          method: "POST",
+          title: "Report a Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id + "/report",
+        },
       ]);
     });
   });
+};
+
+// Report a sauce
+exports.report = async (req, res) => {
+  const baseUri = req.protocol + "://" + req.get("host");
+  let userId = req.userId;
+
+  // Sauce to re^prt
+  Sauce.findById(req.params.id)
+    .then(sauce => {
+      // If sauce to report not found, return an error
+      if (!sauce) {
+        return res
+          .status(401)
+          .json({ error: "Sauce introuvable." });
+      }
+
+      if(sauce.usersAlert.indexOf(userId) === -1) {
+        sauce.usersAlert.push(userId);
+        try {
+        sauce.save();
+        }
+        catch (err) {
+          console.log(err)
+        }
+      }
+
+      return res.status(200).json({ message: "La sauce a bien été signalé." },
+      [
+        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
+        {
+          rel: "create",
+          method: "POST",
+          title: "Create Sauce",
+          href: baseUri + "/api/sauces",
+        },
+        {
+          rel: "readOne",
+          method: "GET",
+          href: baseUri + "/api/sauces/" + sauce._id,
+        },
+        {
+          rel: "update",
+          method: "PUT",
+          title: "Modify Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id,
+        },
+        {
+          rel: "delete",
+          method: "DELETE",
+          title: "Delete Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id,
+        },
+        {
+          rel: "like",
+          method: "POST",
+          title: "Like or Dislike Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id + "/like",
+        },
+        {
+          rel: "report",
+          method: "POST",
+          title: "Report a Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id + "/report",
+        },
+      ]);
+
+    }).catch(error => res.status(500).json({ error }));
 };
