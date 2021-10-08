@@ -6,7 +6,7 @@ info:
   version: "1.0"
 produces: ["application/json"]
 servers:
-  - url: "http://127.0.0.1:3000"
+  - url: "http://localhost:3000"
     description: "Local server test API"
 
 ### Components ###
@@ -208,9 +208,9 @@ paths:
           description: "Unexpected error"
   
   ### Get user datas in JSON ###
-  /api/auth/get-datas:
+  /api/auth/read-datas:
     get:
-      summary: "Get user datas in JSON"
+      summary: "Read user datas in JSON"
       description: "Return an object containing user datas"
       tags: ["Users"]
       security:
@@ -232,7 +232,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Error message"
+                    example: "Utilisateur introuvble"
         500:
           description: "Unexpected error"
   ### Export user datas in TXT ###
@@ -263,11 +263,11 @@ paths:
                     example: "Error message"
         500:
           description: "Unexpected error"
-  ### Alert a user account ###
-  /api/auth/alert:
+  ### Report a user account ###
+  /api/auth/report:
     post:
-      summary: "Alert a user account"
-      description: "Alert a user account"
+      summary: "Report a user account"
+      description: "Report a user account"
       tags: ["Users"]
       security:
         - bearerAuth: []
@@ -301,7 +301,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Error message"
+                    example: "Utilisateur introuvable"
         500:
           description: "Unexpected error"
   ### Update user account ###
@@ -348,7 +348,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Error message"
+                    example: "Utilisateur introuvable"
         500:
           description: "Unexpected error"
   ### Delete user account ###
@@ -379,7 +379,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Error message"
+                    example: "Utilisateur introuvable"
         500:
           description: "Unexpected error"
 
@@ -453,7 +453,17 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Error message"
+                    example: "An error occured"
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Aucune image n'a été envoyé."
         500:
           description: 'Unexpected error'
           content:
@@ -549,7 +559,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Error message"
+                    example: "An error occured"
         500:
           description: 'Unexpected error'
           content:
@@ -590,7 +600,17 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Error message"
+                    example: "An error occured"
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Votre compte utilisateur n\'as pas pu être trouvé."
         404:
           description: 'An error object'
           content:
@@ -657,7 +677,7 @@ paths:
                 properties:
                   error:
                     type: string
-                    example: "Error message"
+                    example: "An error occured"
         404:
           description: 'An error object'
           content:
