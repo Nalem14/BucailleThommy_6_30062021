@@ -16,8 +16,6 @@ function validateEmail(email) {
 
 // Create new User
 exports.signup = async (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
-
   // Check password strength
   if(passwordStrength(req.body.password).value != "Medium" && passwordStrength(req.body.password).value != "Strong") {
     return res.status(400).json({ error: "Le mot de passe indiqué n'est pas suffisamment sécurisé." })
@@ -52,50 +50,7 @@ exports.signup = async (req, res) => {
         .save()
         .then(() => {
           bouncer.reset(req);
-          res.status(201).json({ message: "Votre compte a bien été créé." }, [
-            {
-              rel: "create",
-              method: "POST",
-              title: "Create User",
-              href: baseUri + "/api/auth/signup",
-            },
-            {
-              rel: "login",
-              method: "POST",
-              title: "Login User",
-              href: baseUri + "/api/auth/login",
-            },
-            {
-              rel: "getDatas",
-              method: "GET",
-              title: "Get User datas",
-              href: baseUri + "/api/auth/get-datas",
-            },
-            {
-              rel: "exportDatas",
-              method: "GET",
-              title: "Export User datas",
-              href: baseUri + "/api/auth/export-datas",
-            },
-            {
-              rel: "alert",
-              method: "POST",
-              title: "Alert a User",
-              href: baseUri + "/api/auth/alert",
-            },
-            {
-              rel: "update",
-              method: "PUT",
-              title: "Update User",
-              href: baseUri + "/api/auth/update",
-            },
-            {
-              rel: "delete",
-              method: "DELETE",
-              title: "Delete User",
-              href: baseUri + "/api/auth/delete",
-            }
-          ]);
+          res.status(201).json({ message: "Votre compte a bien été créé." }, hateoasLinks());
         })
         .catch((error) => res.status(400).json({ error }));
     })
@@ -104,8 +59,6 @@ exports.signup = async (req, res) => {
 
 // Login User
 exports.login = (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
-
   // Encrypt email
   var emailEncrypted = encryptEmail(req.body.email);
 
@@ -141,50 +94,7 @@ exports.login = (req, res) => {
                 { expiresIn: "24h" }
               ),
             },
-            [
-              {
-                rel: "create",
-                method: "POST",
-                title: "Create User",
-                href: baseUri + "/api/auth/signup",
-              },
-              {
-                rel: "login",
-                method: "POST",
-                title: "Login User",
-                href: baseUri + "/api/auth/login",
-              },
-              {
-                rel: "getDatas",
-                method: "GET",
-                title: "Get User datas",
-                href: baseUri + "/api/auth/get-datas",
-              },
-              {
-                rel: "exportDatas",
-                method: "GET",
-                title: "Export User datas",
-                href: baseUri + "/api/auth/export-datas",
-              },
-              {
-                rel: "alert",
-                method: "POST",
-                title: "Alert a User",
-                href: baseUri + "/api/auth/alert",
-              },
-              {
-                rel: "update",
-                method: "PUT",
-                title: "Update User",
-                href: baseUri + "/api/auth/update",
-              },
-              {
-                rel: "delete",
-                method: "DELETE",
-                title: "Delete User",
-                href: baseUri + "/api/auth/delete",
-              }
-            ]
+            hateoasLinks()
           );
         })
         .catch((error) => res.status(500).json({ error }));
@@ -193,8 +103,6 @@ exports.login = (req, res) => {
 };
 
 exports.readDatas = (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
-
   User.findOne({ _id: req.userId})
     .then(user => {
       // If user not found, return an error
@@ -207,51 +115,7 @@ exports.readDatas = (req, res) => {
       // Decrypt email
       user.email = decryptEmail(user.email);
 
-      return res.status(200).json(user,
-        [
-          {
-            rel: "create",
-            method: "POST",
-            title: "Create User",
-            href: baseUri + "/api/auth/signup",
-          },
-          {
-            rel: "login",
-            method: "POST",
-            title: "Login User",
-            href: baseUri + "/api/auth/login",
-          },
-          {
-            rel: "getDatas",
-            method: "GET",
-            title: "Get User datas",
-            href: baseUri + "/api/auth/get-datas",
-          },
-          {
-            rel: "exportDatas",
-            method: "GET",
-            title: "Export User datas",
-            href: baseUri + "/api/auth/export-datas",
-          },
-          {
-            rel: "alert",
-            method: "POST",
-            title: "Alert a User",
-            href: baseUri + "/api/auth/alert",
-          },
-          {
-            rel: "update",
-            method: "PUT",
-            title: "Update User",
-            href: baseUri + "/api/auth/update",
-          },
-          {
-            rel: "delete",
-            method: "DELETE",
-            title: "Delete User",
-            href: baseUri + "/api/auth/delete",
-          }
-        ]);
+      return res.status(200).json(user, hateoasLinks());
     })
     .catch((error) => {
       console.error(error);
@@ -282,8 +146,6 @@ exports.exportDatas = (req, res) => {
 
 // Report a user
 exports.report = async (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
-
   let userId = req.body.userId;
   // Get current user in session
   let currentUser = await User.findOne({ _id: req.userId});
@@ -310,58 +172,13 @@ exports.report = async (req, res) => {
         user.save();
       }
 
-      return res.status(200).json({ message: "L'utilisateur a bien été signalé." },
-      [
-        {
-          rel: "create",
-          method: "POST",
-          title: "Create User",
-          href: baseUri + "/api/auth/signup",
-        },
-        {
-          rel: "login",
-          method: "POST",
-          title: "Login User",
-          href: baseUri + "/api/auth/login",
-        },
-        {
-          rel: "getDatas",
-          method: "GET",
-          title: "Get User datas",
-          href: baseUri + "/api/auth/get-datas",
-        },
-        {
-          rel: "exportDatas",
-          method: "GET",
-          title: "Export User datas",
-          href: baseUri + "/api/auth/export-datas",
-        },
-        {
-          rel: "alert",
-          method: "POST",
-          title: "Alert a User",
-          href: baseUri + "/api/auth/alert",
-        },
-        {
-          rel: "update",
-          method: "PUT",
-          title: "Update User",
-          href: baseUri + "/api/auth/update",
-        },
-        {
-          rel: "delete",
-          method: "DELETE",
-          title: "Delete User",
-          href: baseUri + "/api/auth/delete",
-        }
-      ]);
+      return res.status(200).json({ message: "L'utilisateur a bien été signalé." }, hateoasLinks());
 
     }).catch(error => res.status(500).json({ error }));
 };
 
 // Update user account
 exports.update = async (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
 
   // Find user in the current session
   let user = await User.findOne({ _id: req.userId });
@@ -413,109 +230,20 @@ exports.update = async (req, res) => {
   user
   .save()
   .then(() => {
-    res.status(201).json({ message: "Votre compte a bien été modifié." },
-    [
-      {
-        rel: "create",
-        method: "POST",
-        title: "Create User",
-        href: baseUri + "/api/auth/signup",
-      },
-      {
-        rel: "login",
-        method: "POST",
-        title: "Login User",
-        href: baseUri + "/api/auth/login",
-      },
-      {
-        rel: "getDatas",
-        method: "GET",
-        title: "Get User datas",
-        href: baseUri + "/api/auth/get-datas",
-      },
-      {
-        rel: "exportDatas",
-        method: "GET",
-        title: "Export User datas",
-        href: baseUri + "/api/auth/export-datas",
-      },
-      {
-        rel: "alert",
-        method: "POST",
-        title: "Alert a User",
-        href: baseUri + "/api/auth/alert",
-      },
-      {
-        rel: "update",
-        method: "PUT",
-        title: "Update User",
-        href: baseUri + "/api/auth/update",
-      },
-      {
-        rel: "delete",
-        method: "DELETE",
-        title: "Delete User",
-        href: baseUri + "/api/auth/delete",
-      }
-    ]);
+    res.status(201).json({ message: "Votre compte a bien été modifié." }, hateoasLinks());
   })
   .catch((error) => res.status(400).json({ error }));
 };
 
 // Delete User account
 exports.delete = (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
 
   User.findOneAndDelete(req.userId).then(result => {
     if (!result) {
         return res.status(401).json({ error: 'Votre compte utilisateur n\'as pas pu être trouvé.' });
     }
 
-    return res.status(200).json({ message: "Votre compte utilisateur a bien été supprimé."},
-    [
-      {
-        rel: "create",
-        method: "POST",
-        title: "Create User",
-        href: baseUri + "/api/auth/signup",
-      },
-      {
-        rel: "login",
-        method: "POST",
-        title: "Login User",
-        href: baseUri + "/api/auth/login",
-      },
-      {
-        rel: "getDatas",
-        method: "GET",
-        title: "Get User datas",
-        href: baseUri + "/api/auth/get-datas",
-      },
-      {
-        rel: "exportDatas",
-        method: "GET",
-        title: "Export User datas",
-        href: baseUri + "/api/auth/export-datas",
-      },
-      {
-        rel: "alert",
-        method: "POST",
-        title: "Alert a User",
-        href: baseUri + "/api/auth/alert",
-      },
-      {
-        rel: "update",
-        method: "PUT",
-        title: "Update User",
-        href: baseUri + "/api/auth/update",
-      },
-      {
-        rel: "delete",
-        method: "DELETE",
-        title: "Delete User",
-        href: baseUri + "/api/auth/delete",
-      }
-    ]);
+    return res.status(200).json({ message: "Votre compte utilisateur a bien été supprimé."}, hateoasLinks());
   }).catch(error => res.status(500).json({ error }));
 };
 
@@ -526,4 +254,51 @@ function encryptEmail(email) {
 function decryptEmail(email) {
   var bytes  = CryptoJS.AES.decrypt(email, CryptoJS.enc.Base64.parse(process.env.PASSPHRASE), { iv: CryptoJS.enc.Base64.parse(process.env.IV), mode: CryptoJS.mode.ECB, padding: CryptoJS.pad.Pkcs7 });
   return bytes.toString(CryptoJS.enc.Utf8);
+}
+
+function hateoasLinks() {
+  return [
+    {
+      rel: "create",
+      method: "POST",
+      title: "Create User",
+      href: baseUri + "/api/auth/signup",
+    },
+    {
+      rel: "login",
+      method: "POST",
+      title: "Login User",
+      href: baseUri + "/api/auth/login",
+    },
+    {
+      rel: "read",
+      method: "GET",
+      title: "Read User datas",
+      href: baseUri + "/api/auth/read-datas",
+    },
+    {
+      rel: "exportDatas",
+      method: "GET",
+      title: "Export User datas",
+      href: baseUri + "/api/auth/export-datas",
+    },
+    {
+      rel: "report",
+      method: "POST",
+      title: "Report a User",
+      href: baseUri + "/api/auth/report",
+    },
+    {
+      rel: "update",
+      method: "PUT",
+      title: "Update User",
+      href: baseUri + "/api/auth/update",
+    },
+    {
+      rel: "delete",
+      method: "DELETE",
+      title: "Delete User",
+      href: baseUri + "/api/auth/delete",
+    }
+  ];
 }

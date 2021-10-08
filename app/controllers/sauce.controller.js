@@ -20,44 +20,7 @@ exports.readAll = (req, res) => {
 
       datas[i].imageUrl = baseUri + "/images/" + datas[i].imageUrl;
       datas[i] = { ...sauce._doc, links: [] };
-      datas[i].links = [
-        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
-        {
-          rel: "create",
-          method: "POST",
-          title: "Create Sauce",
-          href: baseUri + "/api/sauces",
-        },
-        {
-          rel: "readOne",
-          method: "GET",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "update",
-          method: "PUT",
-          title: "Modify Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "delete",
-          method: "DELETE",
-          title: "Delete Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "like",
-          method: "POST",
-          title: "Like or Dislike Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id + "/like",
-        },
-        {
-          rel: "report",
-          method: "POST",
-          title: "Report a Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id + "/report",
-        },
-      ];
+      datas[i].links = hateoasLinks(sauce._id);
     }
 
     // Return Sauce array
@@ -80,44 +43,7 @@ exports.readOne = (req, res) => {
     sauce.imageUrl = baseUri + "/images/" + sauce.imageUrl;
 
     // Return the Sauce object
-    res.status(200).json(sauce, [
-      { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
-      {
-        rel: "create",
-        method: "POST",
-        title: "Create Sauce",
-        href: baseUri + "/api/sauces",
-      },
-      {
-        rel: "readOne",
-        method: "GET",
-        href: baseUri + "/api/sauces/" + sauce._id,
-      },
-      {
-        rel: "update",
-        method: "PUT",
-        title: "Modify Sauce",
-        href: baseUri + "/api/sauces/" + sauce._id,
-      },
-      {
-        rel: "delete",
-        method: "DELETE",
-        title: "Delete Sauce",
-        href: baseUri + "/api/sauces/" + sauce._id,
-      },
-      {
-        rel: "like",
-        method: "POST",
-        title: "Like or Dislike Sauce",
-        href: baseUri + "/api/sauces/" + sauce._id + "/like",
-      },
-      {
-        rel: "report",
-        method: "POST",
-        title: "Report a Sauce",
-        href: baseUri + "/api/sauces/" + sauce._id + "/report",
-      },
-    ]);
+    res.status(200).json(sauce, hateoasLinks(sauce._id));
   });
 };
 
@@ -125,7 +51,6 @@ exports.readOne = (req, res) => {
 exports.like = (req, res) => {
   let userId = req.body.userId;
   let like = req.body.like;
-  const baseUri = req.protocol + "://" + req.get("host");
 
   Sauce.findById(req.params.id).then(async (sauce) => {
     // If not exist, return an error
@@ -181,44 +106,7 @@ exports.like = (req, res) => {
     // Save the sauce and return response messsage
     Sauce.findByIdAndUpdate(sauce._id, sauce)
       .then(() =>
-        res.status(200).json({ message: "Votre like a été mis à jour." }, [
-          { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
-          {
-            rel: "create",
-            method: "POST",
-            title: "Create Sauce",
-            href: baseUri + "/api/sauces",
-          },
-          {
-            rel: "readOne",
-            method: "GET",
-            href: baseUri + "/api/sauces/" + sauce._id,
-          },
-          {
-            rel: "update",
-            method: "PUT",
-            title: "Modify Sauce",
-            href: baseUri + "/api/sauces/" + sauce._id,
-          },
-          {
-            rel: "delete",
-            method: "DELETE",
-            title: "Delete Sauce",
-            href: baseUri + "/api/sauces/" + sauce._id,
-          },
-          {
-            rel: "like",
-            method: "POST",
-            title: "Like or Dislike Sauce",
-            href: baseUri + "/api/sauces/" + sauce._id + "/like",
-          },
-          {
-            rel: "report",
-            method: "POST",
-            title: "Report a Sauce",
-            href: baseUri + "/api/sauces/" + sauce._id + "/report",
-          },
-        ])
+        res.status(200).json({ message: "Votre like a été mis à jour." }, hateoasLinks(sauce._id))
       )
       .catch((error) => res.status(400).json({ error }));
   });
@@ -226,7 +114,6 @@ exports.like = (req, res) => {
 
 // Add sauce
 exports.add = (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
 
   try {
     let sauceData = JSON.parse(req.body.sauce);
@@ -267,44 +154,7 @@ exports.add = (req, res) => {
         sauce
           .save()
           .then(() =>
-            res.status(201).json({ message: "La sauce a bien été ajoutée." }, [
-              { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
-              {
-                rel: "create",
-                method: "POST",
-                title: "Create Sauce",
-                href: baseUri + "/api/sauces",
-              },
-              {
-                rel: "readOne",
-                method: "GET",
-                href: baseUri + "/api/sauces/" + sauce._id,
-              },
-              {
-                rel: "update",
-                method: "PUT",
-                title: "Modify Sauce",
-                href: baseUri + "/api/sauces/" + sauce._id,
-              },
-              {
-                rel: "delete",
-                method: "DELETE",
-                title: "Delete Sauce",
-                href: baseUri + "/api/sauces/" + sauce._id,
-              },
-              {
-                rel: "like",
-                method: "POST",
-                title: "Like or Dislike Sauce",
-                href: baseUri + "/api/sauces/" + sauce._id + "/like",
-              },
-              {
-                rel: "report",
-                method: "POST",
-                title: "Report a Sauce",
-                href: baseUri + "/api/sauces/" + sauce._id + "/report",
-              },
-            ])
+            res.status(201).json({ message: "La sauce a bien été ajoutée." }, hateoasLinks(sauce._id))
           )
           .catch((error) => res.status(400).json({ error: error }));
       }
@@ -317,7 +167,6 @@ exports.add = (req, res) => {
 
 // Update sauce
 exports.update = async (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
 
   try {
     const sauce = await Sauce.findById(req.params.id);
@@ -364,44 +213,7 @@ exports.update = async (req, res) => {
     sauce
       .save()
       .then(() =>
-        res.status(201).json({ message: "La sauce a bien été modifiée." }, [
-          { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
-          {
-            rel: "create",
-            method: "POST",
-            title: "Create Sauce",
-            href: baseUri + "/api/sauces",
-          },
-          {
-            rel: "readOne",
-            method: "GET",
-            href: baseUri + "/api/sauces/" + sauce._id,
-          },
-          {
-            rel: "update",
-            method: "PUT",
-            title: "Modify Sauce",
-            href: baseUri + "/api/sauces/" + sauce._id,
-          },
-          {
-            rel: "delete",
-            method: "DELETE",
-            title: "Delete Sauce",
-            href: baseUri + "/api/sauces/" + sauce._id,
-          },
-          {
-            rel: "like",
-            method: "POST",
-            title: "Like or Dislike Sauce",
-            href: baseUri + "/api/sauces/" + sauce._id + "/like",
-          },
-          {
-            rel: "report",
-            method: "POST",
-            title: "Report a Sauce",
-            href: baseUri + "/api/sauces/" + sauce._id + "/report",
-          },
-        ])
+        res.status(201).json({ message: "La sauce a bien été modifiée." }, hateoasLinks(sauce._id))
       )
       .catch((error) => res.status(400).json({ error }));
   } catch (error) {
@@ -412,7 +224,6 @@ exports.update = async (req, res) => {
 
 // Delete sauce
 exports.delete = (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
 
   Sauce.findById(req.params.id).then((sauce) => {
     // If not exist, return an error
@@ -432,51 +243,13 @@ exports.delete = (req, res) => {
         return res.status(400).json({ error: err });
       }
 
-      res.status(200).json({ message: "La sauce a bien été supprimée." }, [
-        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
-        {
-          rel: "create",
-          method: "POST",
-          title: "Create Sauce",
-          href: baseUri + "/api/sauces",
-        },
-        {
-          rel: "readOne",
-          method: "GET",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "update",
-          method: "PUT",
-          title: "Modify Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "delete",
-          method: "DELETE",
-          title: "Delete Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "like",
-          method: "POST",
-          title: "Like or Dislike Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id + "/like",
-        },
-        {
-          rel: "report",
-          method: "POST",
-          title: "Report a Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id + "/report",
-        },
-      ]);
+      res.status(200).json({ message: "La sauce a bien été supprimée." }, hateoasLinks(sauce._id));
     });
   });
 };
 
 // Report a sauce
 exports.report = async (req, res) => {
-  const baseUri = req.protocol + "://" + req.get("host");
   let userId = req.userId;
 
   // Sauce to re^prt
@@ -496,44 +269,51 @@ exports.report = async (req, res) => {
         }
       }
 
-      return res.status(200).json({ message: "La sauce a bien été signalé." }, [
-        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
-        {
-          rel: "create",
-          method: "POST",
-          title: "Create Sauce",
-          href: baseUri + "/api/sauces",
-        },
-        {
-          rel: "readOne",
-          method: "GET",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "update",
-          method: "PUT",
-          title: "Modify Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "delete",
-          method: "DELETE",
-          title: "Delete Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id,
-        },
-        {
-          rel: "like",
-          method: "POST",
-          title: "Like or Dislike Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id + "/like",
-        },
-        {
-          rel: "report",
-          method: "POST",
-          title: "Report a Sauce",
-          href: baseUri + "/api/sauces/" + sauce._id + "/report",
-        },
-      ]);
+      return res.status(200).json({ message: "La sauce a bien été signalé." }, hateoasLinks(sauce._id));
     })
     .catch((error) => res.status(500).json({ error }));
 };
+
+// Return an array of all links HATEOAS
+function hateoasLinks(id) {
+  const baseUri = req.protocol + "://" + req.get("host");
+
+  return [
+    { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
+    {
+      rel: "create",
+      method: "POST",
+      title: "Create Sauce",
+      href: baseUri + "/api/sauces",
+    },
+    {
+      rel: "readOne",
+      method: "GET",
+      href: baseUri + "/api/sauces/" + id,
+    },
+    {
+      rel: "update",
+      method: "PUT",
+      title: "Modify Sauce",
+      href: baseUri + "/api/sauces/" + id,
+    },
+    {
+      rel: "delete",
+      method: "DELETE",
+      title: "Delete Sauce",
+      href: baseUri + "/api/sauces/" + id,
+    },
+    {
+      rel: "like",
+      method: "POST",
+      title: "Like or Dislike Sauce",
+      href: baseUri + "/api/sauces/" + id + "/like",
+    },
+    {
+      rel: "report",
+      method: "POST",
+      title: "Report a Sauce",
+      href: baseUri + "/api/sauces/" + id + "/report",
+    },
+  ];
+}
