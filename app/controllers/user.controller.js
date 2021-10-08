@@ -280,7 +280,7 @@ exports.exportDatas = (req, res) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-// Alert a user
+// Report a user
 exports.report = async (req, res) => {
   const baseUri = req.protocol + "://" + req.get("host");
 

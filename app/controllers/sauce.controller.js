@@ -433,3 +433,60 @@ exports.delete = (req, res) => {
     });
   });
 };
+
+// Report a sauce
+exports.report = async (req, res) => {
+  const baseUri = req.protocol + "://" + req.get("host");
+  let userId = req.userId;
+
+  // Sauce to re^prt
+  Sauce.findById(req.params.id)
+    .then(sauce => {
+      // If sauce to report not found, return an error
+      if (!sauce) {
+        return res
+          .status(401)
+          .json({ error: "Sauce introuvable." });
+      }
+
+      if(sauce.usersAlert.indexOf(userId) === -1) {
+        sauce.usersAlert.push(userId);
+        sauce.save();
+      }
+
+      return res.status(200).json({ message: "La sauce a bien été signalé." },
+      [
+        { rel: "readAll", method: "GET", href: baseUri + "/api/sauces" },
+        {
+          rel: "create",
+          method: "POST",
+          title: "Create Sauce",
+          href: baseUri + "/api/sauces",
+        },
+        {
+          rel: "readOne",
+          method: "GET",
+          href: baseUri + "/api/sauces/" + sauce._id,
+        },
+        {
+          rel: "update",
+          method: "PUT",
+          title: "Modify Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id,
+        },
+        {
+          rel: "delete",
+          method: "DELETE",
+          title: "Delete Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id,
+        },
+        {
+          rel: "like",
+          method: "POST",
+          title: "Like or Dislike Sauce",
+          href: baseUri + "/api/sauces/" + sauce._id + "/like",
+        },
+      ]);
+
+    }).catch(error => res.status(500).json({ error }));
+};

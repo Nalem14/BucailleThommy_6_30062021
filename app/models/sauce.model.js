@@ -11,7 +11,8 @@ module.exports = mongoose => {
         likes: {type: Number, default: 0},
         dislikes: {type: Number, default: 0},
         usersLiked: [{ type : String, ref: 'User' }],
-        usersDisliked: [{ type : String, ref: 'User' }]
+        usersDisliked: [{ type : String, ref: 'User' }],
+        usersAlert: [{ type : String, ref: 'User' }],
       },
       { timestamps: true }
     );

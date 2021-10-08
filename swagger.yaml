@@ -631,6 +631,47 @@ paths:
                   error:
                     type: string
                     example: "Error message"
+  ### Report a sauce ###
+  /api/sauces/{id}/report:
+    post:
+      summary: "Report a sauce"
+      description: "Report a sauce"
+      tags: ["Sauces"]
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: "The sauce ID to report"
+                  example: "60e2c6f4cf21ba52757cd5e8"
+      responses:
+        200:
+          description: 'A message object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "La sauce a bien été signalé."
+        401:
+          description: 'An error object'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Sauce introuvable"
+        500:
+          description: "Unexpected error"
   # Like a sauce
   /api/sauces/{id}/like:
     post:
