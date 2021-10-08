@@ -33,6 +33,8 @@ mongoose
   .connect(process.env.DB_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    logger: console.log,
+    loggerLevel: 'info',
   })
   .then(() => {
     console.log("Connected to database");
