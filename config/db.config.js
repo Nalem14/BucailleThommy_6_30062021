@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const bunyan = require("bunyan");
-const log = Logger.createLogger({
+const log = bunyan.createLogger({
   name: "MongoDB Driver",
   streams: [
     {
@@ -17,7 +17,7 @@ const log = Logger.createLogger({
     },
     {
       type: "rotating-file",
-      path: "/var/log/mongodb-sopekocko.log",
+      path: "./logs/mongodb.log",
       period: "1d", // daily rotation
       count: 3, // keep 3 back copies
     },
