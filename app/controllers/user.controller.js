@@ -50,7 +50,7 @@ exports.signup = async (req, res) => {
         .save()
         .then(() => {
           bouncer.reset(req);
-          res.status(201).json({ message: "Votre compte a bien été créé." }, hateoasLinks());
+          res.status(201).json({ message: "Votre compte a bien été créé." }, hateoasLinks(req));
         })
         .catch((error) => res.status(400).json({ error }));
     })
@@ -94,7 +94,7 @@ exports.login = (req, res) => {
                 { expiresIn: "24h" }
               ),
             },
-            hateoasLinks()
+            hateoasLinks(req)
           );
         })
         .catch((error) => res.status(500).json({ error }));
@@ -115,7 +115,7 @@ exports.readDatas = (req, res) => {
       // Decrypt email
       user.email = decryptEmail(user.email);
 
-      return res.status(200).json(user, hateoasLinks());
+      return res.status(200).json(user, hateoasLinks(req));
     })
     .catch((error) => {
       console.error(error);
@@ -172,7 +172,7 @@ exports.report = async (req, res) => {
         user.save();
       }
 
-      return res.status(200).json({ message: "L'utilisateur a bien été signalé." }, hateoasLinks());
+      return res.status(200).json({ message: "L'utilisateur a bien été signalé." }, hateoasLinks(req));
 
     }).catch(error => res.status(500).json({ error }));
 };
@@ -230,7 +230,7 @@ exports.update = async (req, res) => {
   user
   .save()
   .then(() => {
-    res.status(201).json({ message: "Votre compte a bien été modifié." }, hateoasLinks());
+    res.status(201).json({ message: "Votre compte a bien été modifié." }, hateoasLinks(req));
   })
   .catch((error) => res.status(400).json({ error }));
 };
@@ -243,7 +243,7 @@ exports.delete = (req, res) => {
         return res.status(401).json({ error: 'Votre compte utilisateur n\'as pas pu être trouvé.' });
     }
 
-    return res.status(200).json({ message: "Votre compte utilisateur a bien été supprimé."}, hateoasLinks());
+    return res.status(200).json({ message: "Votre compte utilisateur a bien été supprimé."}, hateoasLinks(req));
   }).catch(error => res.status(500).json({ error }));
 };
 
@@ -256,7 +256,9 @@ function decryptEmail(email) {
   return bytes.toString(CryptoJS.enc.Utf8);
 }
 
-function hateoasLinks() {
+function hateoasLinks(req) {
+  const baseUri = req.protocol + "://" + req.get("host");
+
   return [
     {
       rel: "create",

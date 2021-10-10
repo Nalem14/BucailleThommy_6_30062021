@@ -4,7 +4,7 @@ const usersRoutes = require("./users.routes");
 const saucesRoutes = require("./sauces.routes");
 const authMiddleware = require("../middleware/auth.middleware");
 const imageCheckerMiddleware = require("../middleware/imageChecker.middleware");
-const bouncer = require('express-bouncer')(5000, 900000, 3);
+const bouncer = require('express-bouncer')(5000, 900000, 3); // (min, max, attempts)
 
 // Configure spam-protection
 bouncer.whitelist.push('127.0.0.1'); // allow an IP address

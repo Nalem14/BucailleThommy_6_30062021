@@ -11,6 +11,7 @@ const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./swagger.yaml');
 
+// Init .env config
 require('dotenv').config();
 
 /**
