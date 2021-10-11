@@ -9,15 +9,15 @@
 ``git clone https://github.com/Nalem14/BucailleThommy_6_30062021``
 
 ### Create .env file (copy .env.example) and configure it
-``NODE_ENV=development``
+``NODE_ENV=development
 
-``DB_URL=mongodb+srv://sopekocko-user:xPwMfSufJxvxLKI3@cluster0.xhp7z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority``
+DB_URL=mongodb+srv://user:password@host/databasename?retryWrites=true&w=majority
 
-``SECRET=sbcL5tx568Wnntebf8wZn1mlctd6wIw9``
+SECRET=secret-key
 
-``PASSPHRASE=Leucine85Emissary23tachinid``
+PASSPHRASE=pass-phrase
 
-``IV=Kola14tumble06opacity``
+IV=pass-phrase-iv``
 
 ### Go into the project folder and install npm packages
 ``npm install``
