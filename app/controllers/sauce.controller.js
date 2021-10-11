@@ -20,7 +20,7 @@ exports.readAll = (req, res) => {
 
       datas[i].imageUrl = baseUri + "/images/" + datas[i].imageUrl;
       datas[i] = { ...sauce._doc, links: [] };
-      datas[i].links = hateoasLinks(sauce._id);
+      datas[i].links = hateoasLinks(req, sauce._id);
     }
 
     // Return Sauce array
@@ -43,7 +43,7 @@ exports.readOne = (req, res) => {
     sauce.imageUrl = baseUri + "/images/" + sauce.imageUrl;
 
     // Return the Sauce object
-    res.status(200).json(sauce, hateoasLinks(sauce._id));
+    res.status(200).json(sauce, hateoasLinks(req, sauce._id));
   });
 };
 
@@ -106,7 +106,7 @@ exports.like = (req, res) => {
     // Save the sauce and return response messsage
     Sauce.findByIdAndUpdate(sauce._id, sauce)
       .then(() =>
-        res.status(200).json({ message: "Votre like a été mis à jour." }, hateoasLinks(sauce._id))
+        res.status(200).json({ message: "Votre like a été mis à jour." }, hateoasLinks(req, sauce._id))
       )
       .catch((error) => res.status(400).json({ error }));
   });
@@ -154,7 +154,7 @@ exports.add = (req, res) => {
         sauce
           .save()
           .then(() =>
-            res.status(201).json({ message: "La sauce a bien été ajoutée." }, hateoasLinks(sauce._id))
+            res.status(201).json({ message: "La sauce a bien été ajoutée." }, hateoasLinks(req, sauce._id))
           )
           .catch((error) => res.status(400).json({ error: error }));
       }
@@ -213,7 +213,7 @@ exports.update = async (req, res) => {
     sauce
       .save()
       .then(() =>
-        res.status(201).json({ message: "La sauce a bien été modifiée." }, hateoasLinks(sauce._id))
+        res.status(201).json({ message: "La sauce a bien été modifiée." }, hateoasLinks(req, sauce._id))
       )
       .catch((error) => res.status(400).json({ error }));
   } catch (error) {
@@ -243,7 +243,7 @@ exports.delete = (req, res) => {
         return res.status(400).json({ error: err });
       }
 
-      res.status(200).json({ message: "La sauce a bien été supprimée." }, hateoasLinks(sauce._id));
+      res.status(200).json({ message: "La sauce a bien été supprimée." }, hateoasLinks(req, sauce._id));
     });
   });
 };
@@ -269,13 +269,13 @@ exports.report = async (req, res) => {
         }
       }
 
-      return res.status(200).json({ message: "La sauce a bien été signalé." }, hateoasLinks(sauce._id));
+      return res.status(200).json({ message: "La sauce a bien été signalé." }, hateoasLinks(req, sauce._id));
     })
     .catch((error) => res.status(500).json({ error }));
 };
 
 // Return an array of all links HATEOAS
-function hateoasLinks(id) {
+function hateoasLinks(req, id) {
   const baseUri = req.protocol + "://" + req.get("host");
 
   return [
