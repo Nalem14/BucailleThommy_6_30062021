@@ -10,9 +10,13 @@
 
 ### Create .env file (copy .env.example) and configure it
 ``NODE_ENV=development``
+
 ``DB_URL=mongodb+srv://sopekocko-user:xPwMfSufJxvxLKI3@cluster0.xhp7z.mongodb.net/myFirstDatabase?retryWrites=true&w=majority``
+
 ``SECRET=sbcL5tx568Wnntebf8wZn1mlctd6wIw9``
+
 ``PASSPHRASE=Leucine85Emissary23tachinid``
+
 ``IV=Kola14tumble06opacity``
 
 ### Go into the project folder and install npm packages
