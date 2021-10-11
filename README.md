@@ -9,7 +9,7 @@
 ``git clone https://github.com/Nalem14/BucailleThommy_6_30062021``
 
 ### Create .env file (copy .env.example) and configure it
-``NODE_ENV=development
+NODE_ENV=development
 
 DB_URL=mongodb+srv://user:password@host/databasename?retryWrites=true&w=majority
 
@@ -17,7 +17,7 @@ SECRET=secret-key
 
 PASSPHRASE=pass-phrase
 
-IV=pass-phrase-iv``
+IV=pass-phrase-iv
 
 ### Go into the project folder and install npm packages
 ``npm install``
