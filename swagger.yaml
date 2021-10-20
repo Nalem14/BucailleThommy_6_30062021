@@ -522,6 +522,13 @@ paths:
       tags: ["Sauces"]
       security:
         - bearerAuth: []
+      parameters:
+        - name: id
+          description: The sauce ID
+          in: path
+          required: true
+          type: integer
+          example: 60e6d87e80ef5f71eaa28a2a
       requestBody:
         content:
           application/json:
@@ -577,9 +584,12 @@ paths:
       security:
         - bearerAuth: []
       parameters:
-        - in: path
-          name: id
-          description: "The Sauce id"
+        - name: id
+          description: The sauce ID
+          in: path
+          required: true
+          type: integer
+          example: 60e6d87e80ef5f71eaa28a2a
       responses:
         200:
           description: "A message object"
@@ -639,6 +649,13 @@ paths:
       tags: ["Sauces"]
       security:
         - bearerAuth: []
+      parameters:
+        - name: id
+          description: The sauce ID
+          in: path
+          required: true
+          type: integer
+          example: 60e6d87e80ef5f71eaa28a2a
       responses:
         200:
           description: 'A message object'
