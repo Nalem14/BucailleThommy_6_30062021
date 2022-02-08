@@ -32,7 +32,7 @@
     "hibp": "^11.0.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.1.6",
+    "mongoose": "^6.1.7",
     "string-sanitizer": "^2.0.2",
     "swagger-ui-express": "^4.3.0",
     "toobusy-js": "^0.5.1",
