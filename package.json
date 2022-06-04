@@ -34,7 +34,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.7",
     "string-sanitizer": "^2.0.2",
-    "swagger-ui-express": "^4.3.0",
+    "swagger-ui-express": "^4.4.0",
     "toobusy-js": "^0.5.1",
     "yamljs": "^0.3.0"
   }
